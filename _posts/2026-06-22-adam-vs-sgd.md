@@ -2,6 +2,8 @@
 layout: post
 title: "Adam vs. SGD, Briefly"
 subtitle: "Why adaptive steps help — and when plain SGD still wins."
+summary: "A compact comparison of SGD and Adam: update rules, adaptive scaling, convergence behavior, and practical defaults."
+thumbnail: /assets/images/accuracy-curve.svg
 date: 2026-06-22
 tags: [optimization, deep-learning]
 ---
@@ -56,11 +58,11 @@ a flatter minimum. Toggle the views:
     {"type":"scatter","mode":"lines","name":"SGD + momentum",
      "x":[0,1,2,3,4,5,6,7,8,9,10],
      "y":[5.0,4.2,3.5,2.9,2.4,2.0,1.7,1.5,1.35,1.25,1.2],
-     "line":{"color":"#5cc2a0","width":3}},
+     "line":{"color":"#8bcac0","width":3}},
     {"type":"scatter","mode":"lines","name":"Adam",
      "x":[0,1,2,3,4,5,6,7,8,9,10],
      "y":[5.0,3.1,2.0,1.5,1.25,1.15,1.12,1.18,1.22,1.25,1.27],
-     "line":{"color":"#8c7ae0","width":3}}
+     "line":{"color":"#b9addf","width":3}}
   ],
   "layout": {"legend":{"orientation":"h"},
              "xaxis":{"title":"epoch"},"yaxis":{"title":"validation loss"}}

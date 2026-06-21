@@ -11,13 +11,12 @@
 <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 {%- feed_meta -%}
 
-<!-- Set theme + font BEFORE first paint to avoid a flash. -->
+<!-- Set reading font BEFORE first paint to avoid a flash. -->
 <script>
   (function () {
     try {
-      var t = localStorage.getItem('blog-theme');
-      if (!t) t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.setAttribute('data-theme', t);
+      localStorage.removeItem('blog-theme');
+      document.documentElement.setAttribute('data-theme', 'light');
       var f = localStorage.getItem('blog-font') || 'newsreader';
       document.documentElement.setAttribute('data-font', f);
     } catch (e) {}

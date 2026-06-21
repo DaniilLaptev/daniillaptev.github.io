@@ -1,6 +1,6 @@
 /* ============================================================
    Into the Sky — interactions
-   progress bar · settings (font/theme) · TOC · carousel ·
+   progress bar · settings (font) · TOC · carousel ·
    plot-switcher · interactive plots · copy buttons · anchors
    ============================================================ */
 (function () {
@@ -8,9 +8,8 @@
 
   var doc = document.documentElement;
 
-  // Registry of Plotly plots so we can resize them when revealed (a plot
-  // rendered inside a hidden tab/slide has zero size until shown) and
-  // re-theme them when the colour scheme changes.
+  // Registry of Plotly plots so we can resize them when revealed. A plot
+  // rendered inside a hidden tab/slide has zero size until shown.
   var iplots = [];
   function resizeIPlots(scope) {
     if (!window.Plotly) return;
@@ -40,7 +39,7 @@
     update();
   })();
 
-  /* ---- Settings: font + theme ---------------------------- */
+  /* ---- Settings: font ------------------------------------ */
   (function () {
     var toggle = document.getElementById('settings-toggle');
     var menu = document.getElementById('settings-menu');
@@ -51,30 +50,15 @@
       try { localStorage.setItem('blog-font', f); } catch (e) {}
       syncChecks();
     }
-    function setTheme(t) {
-      doc.setAttribute('data-theme', t);
-      try { localStorage.setItem('blog-theme', t); } catch (e) {}
-      var meta = document.querySelector('meta[name="theme-color"]');
-      if (meta) meta.setAttribute('content', t === 'dark' ? '#1a1820' : '#fbfaf7');
-      document.dispatchEvent(new CustomEvent('blog:theme', { detail: t }));
-      syncChecks();
-    }
     function syncChecks() {
       var font = doc.getAttribute('data-font');
-      var theme = doc.getAttribute('data-theme');
       menu.querySelectorAll('.font-opt').forEach(function (b) {
         b.setAttribute('aria-checked', b.dataset.font === font);
-      });
-      menu.querySelectorAll('.theme-opt').forEach(function (b) {
-        b.setAttribute('aria-checked', b.dataset.themeSet === theme);
       });
     }
 
     menu.querySelectorAll('.font-opt').forEach(function (b) {
       b.addEventListener('click', function () { setFont(b.dataset.font); });
-    });
-    menu.querySelectorAll('.theme-opt').forEach(function (b) {
-      b.addEventListener('click', function () { setTheme(b.dataset.themeSet); });
     });
 
     function open() { menu.hidden = false; toggle.setAttribute('aria-expanded', 'true'); }
@@ -112,27 +96,34 @@
       h.insertBefore(a, h.firstChild);
     });
 
-    var nav = document.getElementById('toc-list');
-    if (nav && headings.length) {
-      headings.forEach(function (h) {
-        var a = document.createElement('a');
-        a.href = '#' + h.id;
-        a.textContent = (h.textContent || '').replace(/^#/, '');
-        a.className = h.tagName === 'H3' ? 'lvl-3' : 'lvl-2';
-        a.addEventListener('click', function () { history.replaceState(null, '', '#' + h.id); });
-        nav.appendChild(a);
+    var navs = Array.prototype.slice.call(document.querySelectorAll('[data-toc-list]'));
+    if (navs.length && headings.length) {
+      navs.forEach(function (nav) {
+        headings.forEach(function (h) {
+          var a = document.createElement('a');
+          a.href = '#' + h.id;
+          a.textContent = (h.textContent || '').replace(/^#/, '');
+          a.className = h.tagName === 'H3' ? 'lvl-3' : 'lvl-2';
+          a.addEventListener('click', function () { history.replaceState(null, '', '#' + h.id); });
+          nav.appendChild(a);
+        });
       });
 
-      var links = nav.querySelectorAll('a');
+      var links = document.querySelectorAll('[data-toc-list] a');
       var byId = {};
-      links.forEach(function (l) { byId[l.getAttribute('href').slice(1)] = l; });
+      links.forEach(function (l) {
+        var id = l.getAttribute('href').slice(1);
+        if (!byId[id]) byId[id] = [];
+        byId[id].push(l);
+      });
 
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (en) {
           if (en.isIntersecting) {
             links.forEach(function (l) { l.classList.remove('active'); });
-            var active = byId[en.target.id];
-            if (active) active.classList.add('active');
+            (byId[en.target.id] || []).forEach(function (active) {
+              active.classList.add('active');
+            });
           }
         });
       }, { rootMargin: '-10% 0px -75% 0px', threshold: 0 });
@@ -141,8 +132,9 @@
       var tocToggle = document.querySelector('.toc-toggle');
       if (tocToggle) {
         tocToggle.addEventListener('click', function () {
-          var collapsed = nav.style.display === 'none';
-          nav.style.display = collapsed ? '' : 'none';
+          var desktopNav = document.getElementById('toc-list');
+          var collapsed = desktopNav.style.display === 'none';
+          desktopNav.style.display = collapsed ? '' : 'none';
           tocToggle.setAttribute('aria-expanded', String(collapsed));
         });
       }
@@ -264,21 +256,54 @@
     var filter = document.getElementById('topic-filter');
     var list = document.getElementById('post-list');
     if (!filter || !list) return;
+    var search = document.getElementById('post-search');
+    var count = document.getElementById('post-count');
+    var empty = document.getElementById('post-empty');
     var cards = Array.prototype.slice.call(list.querySelectorAll('.post-card'));
+    var activeTag = '*';
+
+    function label(n) {
+      return n + ' ' + (n === 1 ? 'post' : 'posts');
+    }
+
+    function update() {
+      var query = search ? search.value.trim().toLowerCase() : '';
+      var visible = 0;
+      cards.forEach(function (card) {
+        var tags = ' ' + (card.dataset.tags || '') + ' ';
+        var text = card.dataset.search || '';
+        var tagMatch = activeTag === '*' || tags.indexOf(' ' + activeTag + ' ') !== -1;
+        var queryMatch = !query || text.indexOf(query) !== -1;
+        var show = tagMatch && queryMatch;
+        card.classList.toggle('is-hidden', !show);
+        if (show) visible += 1;
+      });
+      if (count) count.textContent = label(visible);
+      if (empty) empty.hidden = visible !== 0;
+    }
 
     filter.addEventListener('click', function (e) {
       var btn = e.target.closest('.topic');
       if (!btn) return;
-      var tag = btn.dataset.tag;
+      activeTag = btn.dataset.tag;
       filter.querySelectorAll('.topic').forEach(function (b) {
         b.classList.toggle('active', b === btn);
+        b.setAttribute('aria-pressed', String(b === btn));
       });
-      cards.forEach(function (card) {
-        var tags = ' ' + (card.dataset.tags || '') + ' ';
-        var show = tag === '*' || tags.indexOf(' ' + tag + ' ') !== -1;
-        card.classList.toggle('is-hidden', !show);
-      });
+      update();
     });
+
+    if (search) {
+      search.addEventListener('input', update);
+      search.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && search.value) {
+          search.value = '';
+          update();
+        }
+      });
+    }
+
+    update();
   })();
 
   /* ---- Interactive plots (Plotly, lazy-loaded) ----------- */
@@ -286,12 +311,11 @@
     var nodes = Array.prototype.slice.call(document.querySelectorAll('.iplot'));
     if (!nodes.length) return;
 
-    // Pull theme-aware colours from the live CSS variables so plots match
-    // the page in both light and dark mode.
-    function themePatch() {
+    // Pull colours from the live CSS variables so plots match the page.
+    function plotColors() {
       var cs = getComputedStyle(doc);
-      var text = cs.getPropertyValue('--text').trim() || '#2f2b35';
-      var grid = cs.getPropertyValue('--border').trim() || '#e7e3dc';
+      var text = cs.getPropertyValue('--text').trim() || '#242520';
+      var grid = cs.getPropertyValue('--border').trim() || '#e6ded3';
       var axis = { gridcolor: grid, zerolinecolor: grid, linecolor: grid, color: text };
       return {
         paper_bgcolor: 'rgba(0,0,0,0)',
@@ -309,17 +333,11 @@
         var spec;
         try { spec = JSON.parse(script.textContent); } catch (e) { return; }
         var layout = Object.assign({ autosize: true, margin: { l: 40, r: 16, t: 16, b: 40 } },
-                                   spec.layout || {}, themePatch());
+                                   spec.layout || {}, plotColors());
         var config = Object.assign({ responsive: true, displayModeBar: 'hover',
                                      displaylogo: false }, spec.config || {});
         window.Plotly.newPlot(node, spec.data || [], layout, config);
         iplots.push(node);
-      });
-    }
-
-    function reTheme() {
-      iplots.forEach(function (n) {
-        try { window.Plotly.relayout(n, themePatch()); } catch (e) {}
       });
     }
 
@@ -332,7 +350,6 @@
       document.head.appendChild(s);
     }
 
-    document.addEventListener('blog:theme', reTheme);
     load();
   })();
 

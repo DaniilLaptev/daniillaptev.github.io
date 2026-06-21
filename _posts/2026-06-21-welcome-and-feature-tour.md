@@ -2,6 +2,8 @@
 layout: post
 title: "A Field Guide to This Blog"
 subtitle: "Math, plots, and the interactive bits — all in one tour."
+summary: "A quick tour of the blog toolkit: MathJax, tabbed figures, interactive plots, carousels, code blocks, tables, and sidenotes."
+thumbnail: /assets/images/loss-curve.svg
 date: 2026-06-21
 tags: [meta, deep-learning, optimization]
 ---
@@ -79,7 +81,7 @@ Static images (`<img>`, SVG or PNG) are perfect for most figures. When you want
 a `<div class="iplot">` containing a `<script type="application/json">` with a
 [Plotly](https://plotly.com/javascript/) spec (`data`, `layout`, `config`).
 Plotly is lazy-loaded only on pages that use it, and the plot automatically
-re-themes with the light/dark toggle. Drag to rotate:
+inherits the site's colours. Drag to rotate:
 
 <div class="iplot" style="height:420px">
 <script type="application/json">
@@ -89,12 +91,12 @@ re-themes with the light/dark toggle. Drag to rotate:
      "x":[1.1,0.8,1.3,0.9,1.2,0.7,1.0,1.4],
      "y":[0.9,1.2,1.0,0.7,1.3,1.1,0.8,1.0],
      "z":[1.0,0.8,1.2,1.1,0.9,1.3,0.7,1.0],
-     "marker":{"size":5,"color":"#8c7ae0"}},
+     "marker":{"size":5,"color":"#b9addf"}},
     {"type":"scatter3d","mode":"markers","name":"class B",
      "x":[-1.0,-0.8,-1.3,-0.9,-1.2,-0.7,-1.1,-1.0],
      "y":[-1.1,-0.9,-1.0,-1.3,-0.7,-1.2,-0.8,-1.0],
      "z":[-0.9,-1.2,-1.0,-0.8,-1.3,-0.7,-1.1,-1.0],
-     "marker":{"size":5,"color":"#e87aa6"}}
+     "marker":{"size":5,"color":"#e0a097"}}
   ],
   "layout": {"legend":{"orientation":"h"}}
 }
@@ -123,7 +125,7 @@ SVG and the other is a live 3D plot:
      "x":[1,0.7,1.2,-1,-0.8,-1.1,0.1,-0.2,0.0],
      "y":[1,1.1,0.8,-1,-1.2,-0.9,0.0,0.2,-0.1],
      "z":[1,0.9,1.1,-1,-0.7,-1.2,0.2,-0.1,0.0],
-     "marker":{"size":5,"color":[0,0,0,1,1,1,2,2,2],"colorscale":[[0,"#8c7ae0"],[0.5,"#e87aa6"],[1,"#5cc2a0"]]}}
+     "marker":{"size":5,"color":[0,0,0,1,1,1,2,2,2],"colorscale":[[0,"#b9addf"],[0.5,"#e0a097"],[1,"#8bcac0"]]}}
   ],
   "layout": {}
 }

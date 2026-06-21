@@ -22,5 +22,5 @@ with interactive figures where they earn their keep.
 
 Built with [Jekyll](https://jekyllrb.com/), math by
 [MathJax](https://www.mathjax.org/), hosted on GitHub Pages. Three reading
-fonts, a pastel light/dark theme, and a progress bar that tries to stay out of
+fonts, a quiet pastel light theme, and a progress bar that tries to stay out of
 your way.

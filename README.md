@@ -1,7 +1,7 @@
 # Into the Sky — a research blog
 
 A minimal, math-heavy personal blog built with Jekyll and MathJax, designed for
-GitHub Pages. Pastel light/dark themes, three switchable reading fonts, a top
+GitHub Pages. A quiet pastel light theme, three switchable reading fonts, a top
 reading-progress bar, an auto-generated table of contents, image carousels, and
 tabbed plot switchers.
 
@@ -36,6 +36,8 @@ Add `_posts/YYYY-MM-DD-title.md` with front matter:
 layout: post
 title: "My Title"
 subtitle: "Optional one-liner"
+summary: "Short homepage summary"
+thumbnail: /assets/images/my-figure.svg
 date: 2026-06-21
 tags: [optimization, theory]
 toc: true   # set false to hide the table of contents
@@ -64,8 +66,7 @@ no tab is shown — so the same markup works for one plot or many.
 
 ### Interactive plots (Plotly)
 For hover tooltips, zoom, or rotatable 3D, use an `.iplot` block. Plotly is
-lazy-loaded only on pages that need it, themed from the CSS variables, and
-re-themed automatically on the light/dark toggle.
+lazy-loaded only on pages that need it and styled from the CSS variables.
 ```html
 <div class="iplot" style="height:420px">
 <script type="application/json">
@@ -112,19 +113,18 @@ Add `markdown="1"` to the `<div>` if you want Markdown processed inside it.
 ## Layout
 
 - **Home** ([index.html](index.html)) is a two-column grid: a sticky left
-  **sidebar** (identity, navigation, and a JS-powered topic/tag filter) plus the
-  post list. Tags come from each post's front matter automatically; clicking a
-  topic filters the list in place.
+  **sidebar** (identity, navigation, and a JS-powered topic/tag filter) plus a
+  searchable post list. Tags come from each post's front matter automatically;
+  clicking a topic and typing in the search box filter the list in place.
 - **Posts** ([_layouts/post.html](_layouts/post.html)) use three zones inside a
   wide frame: the **TOC** on the left, the reading column in the middle, and the
-  right margin for **sidenotes** (and, if you add them later, a cite box,
-  related posts, or a share strip — the right rail is already reserved space).
+  right margin for **sidenotes**. On narrower screens the side TOC becomes a
+  horizontal section nav above the article body, and sidenotes fold inline.
 - Header, footer, and the home grid share the `--wide` frame width; the reading
   column stays at `--maxw`. Both are CSS variables in `assets/css/style.css`.
 
 ## Customizing the look
-- **Colors / palette**: CSS variables at the top of `assets/css/style.css`
-  (`[data-theme="light"]` and `[data-theme="dark"]`).
+- **Colors / palette**: CSS variables at the top of `assets/css/style.css`.
 - **Fonts**: the three options are wired in `_includes/header.html`,
   `assets/css/style.css` (`--font-*`), and loaded in `_includes/head.html`.
 - **Behavior** (progress bar, TOC, carousel, tabs): `assets/js/main.js`.

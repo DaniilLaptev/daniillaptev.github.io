@@ -5,7 +5,7 @@ layout: default
   {%- if page.toc != false -%}
   <aside class="toc" aria-label="Table of contents">
     <button class="toc-toggle" aria-expanded="true" aria-controls="toc-list">Contents</button>
-    <nav id="toc-list"><!-- populated by main.js --></nav>
+    <nav id="toc-list" data-toc-list><!-- populated by main.js --></nav>
   </aside>
   {%- endif -%}
 
@@ -26,10 +26,30 @@ layout: default
       </p>
     </header>
 
+    {%- if page.toc != false -%}
+    <nav class="mobile-toc" aria-label="Post sections" data-toc-list><!-- populated by main.js --></nav>
+    {%- endif -%}
+
     {{ content }}
 
     <footer class="post-foot">
-      <a class="back-link" href="{{ '/' | relative_url }}">← All writing</a>
+      {%- if page.previous or page.next -%}
+      <nav class="post-nextprev" aria-label="More writing">
+        {%- if page.previous -%}
+        <a class="post-nav-link" href="{{ page.previous.url | relative_url }}">
+          <span>Previous</span>
+          {{ page.previous.title }}
+        </a>
+        {%- endif -%}
+        {%- if page.next -%}
+        <a class="post-nav-link next" href="{{ page.next.url | relative_url }}">
+          <span>Next</span>
+          {{ page.next.title }}
+        </a>
+        {%- endif -%}
+      </nav>
+      {%- endif -%}
+      <a class="back-link" href="{{ '/' | relative_url }}">All writing</a>
     </footer>
   </article>
 </div></div>
