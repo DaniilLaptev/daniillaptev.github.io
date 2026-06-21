@@ -7,8 +7,8 @@ tags: [optimization, deep-learning]
 ---
 
 Both **SGD** and **Adam** descend the same loss $$\Loss(\theta)$$ using the
-stochastic gradient $$g_t = \grad_\theta \Loss(\theta_t)$$. They differ only in
-how they turn that gradient into a step.
+stochastic gradient $$g_t = \grad_\theta \Loss(\theta_t)$$.<span class="sidenote">Adam is short for *adaptive moment estimation* (Kingma & Ba, 2015). This kind of aside is a **sidenote** — it sits in the right margin on wide screens and folds inline on narrow ones.</span>
+They differ only in how they turn that gradient into a step.
 
 ## The update rules
 

@@ -1,26 +1,59 @@
 ---
 layout: default
 ---
-<section class="intro prose">
-  <h1 class="home-title">{{ site.title }}</h1>
-  <p class="home-tagline">{{ site.tagline }}</p>
-  <p class="home-desc">{{ site.description }}</p>
-</section>
+<div class="wrap-wide home-layout">
 
-<section class="post-list">
-  {%- for post in site.posts -%}
-  <article class="post-card">
-    <a class="post-card-link" href="{{ post.url | relative_url }}">
-      <time class="post-card-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
-      <h2 class="post-card-title">{{ post.title }}</h2>
-      {%- if post.subtitle -%}<p class="post-card-sub">{{ post.subtitle }}</p>{%- endif -%}
-      {%- if post.excerpt -%}<p class="post-card-excerpt">{{ post.excerpt | strip_html | truncatewords: 32 }}</p>{%- endif -%}
-      {%- if post.tags and post.tags.size > 0 -%}
-      <p class="post-card-tags">{%- for tag in post.tags -%}<span class="tag">{{ tag }}</span>{%- endfor -%}</p>
-      {%- endif -%}
-    </a>
-  </article>
-  {%- else -%}
-  <p class="empty">No posts yet. Add a Markdown file to <code>_posts/</code> to get started.</p>
-  {%- endfor -%}
-</section>
+  <aside class="home-sidebar">
+    <p class="sidebar-id-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></p>
+    <p class="sidebar-tagline">{{ site.tagline }}</p>
+    <p class="sidebar-bio">{{ site.description }}</p>
+
+    <div class="sidebar-section">
+      <h2>Navigate</h2>
+      <nav class="sidebar-nav">
+        <a href="{{ '/about/' | relative_url }}">About</a>
+        <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a>
+        {%- if site.github_username and site.github_username != "" -%}
+        <a href="https://github.com/{{ site.github_username }}" rel="me">GitHub</a>
+        {%- endif -%}
+        {%- if site.scholar_url and site.scholar_url != "" -%}
+        <a href="{{ site.scholar_url }}">Scholar</a>
+        {%- endif -%}
+      </nav>
+    </div>
+
+    {%- if site.tags.size > 0 -%}
+    <div class="sidebar-section">
+      <h2>Topics</h2>
+      <div class="topic-filter" id="topic-filter">
+        <button class="topic active" data-tag="*" type="button">all</button>
+        {%- for tag in site.tags -%}
+        <button class="topic" data-tag="{{ tag[0] | slugify }}" type="button">{{ tag[0] }}</button>
+        {%- endfor -%}
+      </div>
+    </div>
+    {%- endif -%}
+  </aside>
+
+  <section class="home-main">
+    <p class="list-heading">Writing</p>
+    <div class="post-list" id="post-list">
+      {%- for post in site.posts -%}
+      <article class="post-card" data-tags="{% for t in post.tags %}{{ t | slugify }} {% endfor %}">
+        <a class="post-card-link" href="{{ post.url | relative_url }}">
+          <time class="post-card-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+          <h2 class="post-card-title">{{ post.title }}</h2>
+          {%- if post.subtitle -%}<p class="post-card-sub">{{ post.subtitle }}</p>{%- endif -%}
+          {%- if post.excerpt -%}<p class="post-card-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>{%- endif -%}
+          {%- if post.tags and post.tags.size > 0 -%}
+          <p class="post-card-tags">{%- for tag in post.tags -%}<span class="tag">{{ tag }}</span>{%- endfor -%}</p>
+          {%- endif -%}
+        </a>
+      </article>
+      {%- else -%}
+      <p class="empty">No posts yet. Add a Markdown file to <code>_posts/</code> to get started.</p>
+      {%- endfor -%}
+    </div>
+  </section>
+
+</div>

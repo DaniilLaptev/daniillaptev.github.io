@@ -259,6 +259,28 @@
     });
   })();
 
+  /* ---- Home: topic (tag) filter -------------------------- */
+  (function () {
+    var filter = document.getElementById('topic-filter');
+    var list = document.getElementById('post-list');
+    if (!filter || !list) return;
+    var cards = Array.prototype.slice.call(list.querySelectorAll('.post-card'));
+
+    filter.addEventListener('click', function (e) {
+      var btn = e.target.closest('.topic');
+      if (!btn) return;
+      var tag = btn.dataset.tag;
+      filter.querySelectorAll('.topic').forEach(function (b) {
+        b.classList.toggle('active', b === btn);
+      });
+      cards.forEach(function (card) {
+        var tags = ' ' + (card.dataset.tags || '') + ' ';
+        var show = tag === '*' || tags.indexOf(' ' + tag + ' ') !== -1;
+        card.classList.toggle('is-hidden', !show);
+      });
+    });
+  })();
+
   /* ---- Interactive plots (Plotly, lazy-loaded) ----------- */
   (function () {
     var nodes = Array.prototype.slice.call(document.querySelectorAll('.iplot'));

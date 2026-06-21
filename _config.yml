@@ -29,10 +29,11 @@ future: true
 kramdown:
   input: GFM
   hard_wrap: false
-  # null => kramdown emits raw \( \) and \[ \] delimiters, which MathJax 3
-  # picks up directly. It still PROTECTS math content from Markdown, so
+  # kramdown converts $$...$$ in Markdown into bare \( \) (inline) and \[ \]
+  # (display) delimiters, which MathJax 3 picks up directly (see
+  # _includes/mathjax.html). It still PROTECTS math content from Markdown, so
   # underscores and asterisks inside $$...$$ never get mangled.
-  math_engine: null
+  math_engine: mathjax
   syntax_highlighter: rouge
   syntax_highlighter_opts:
     block:

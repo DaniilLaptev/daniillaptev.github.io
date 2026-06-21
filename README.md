@@ -90,6 +90,16 @@ re-themed automatically on the light/dark toggle.
 </div>
 ```
 
+### Sidenotes (margin notes)
+Fill the right margin of a post with Tufte/Distill-style asides:
+```html
+Some claim in the text.<span class="sidenote">An aside that sits in the right
+margin on wide screens and folds into an indented block on narrow ones.</span>
+```
+Put the `<span>` right after the word it annotates. Add `markdown="span"` to the
+span if you want Markdown (links, math `$$…$$`) processed inside it. Below
+~1200px wide the right rail disappears and notes fold inline automatically.
+
 ### Callouts
 ```html
 <div class="callout key">   <!-- or: note, warn -->
@@ -98,6 +108,19 @@ re-themed automatically on the light/dark toggle.
 </div>
 ```
 Add `markdown="1"` to the `<div>` if you want Markdown processed inside it.
+
+## Layout
+
+- **Home** ([index.html](index.html)) is a two-column grid: a sticky left
+  **sidebar** (identity, navigation, and a JS-powered topic/tag filter) plus the
+  post list. Tags come from each post's front matter automatically; clicking a
+  topic filters the list in place.
+- **Posts** ([_layouts/post.html](_layouts/post.html)) use three zones inside a
+  wide frame: the **TOC** on the left, the reading column in the middle, and the
+  right margin for **sidenotes** (and, if you add them later, a cite box,
+  related posts, or a share strip — the right rail is already reserved space).
+- Header, footer, and the home grid share the `--wide` frame width; the reading
+  column stays at `--maxw`. Both are CSS variables in `assets/css/style.css`.
 
 ## Customizing the look
 - **Colors / palette**: CSS variables at the top of `assets/css/style.css`

@@ -10,13 +10,14 @@
              '[tex]/noerrors', '[tex]/noundefined']
     },
     tex: {
-      // kramdown (math_engine: null) wraps math in <span/div class="kdmath">
-      // using $ … $ (inline) and $$ … $$ (display) and has ALREADY protected
-      // the contents from Markdown. We render those dollars but, via
-      // processHtmlClass below, only inside .kdmath — so stray $ in prose
-      // (e.g. "it cost $5") is never mistaken for math.
-      inlineMath: [['$', '$']],
-      displayMath: [['$$', '$$']],
+      // kramdown's math engine converts $$…$$ in Markdown into bare \(…\)
+      // (inline) and \[…\] (display) delimiters, having ALREADY protected the
+      // contents from Markdown (so _ * ^ inside are safe). We match those
+      // delimiters. We also keep $$…$$ for display as a fallback. We do NOT
+      // enable single $ as a delimiter, so stray $ in prose ("it cost $5")
+      // is never mistaken for math.
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']],
       processEscapes: true,
       processEnvironments: true,
       tags: 'ams',
@@ -56,9 +57,9 @@
     },
     chtml: { scale: 1.0, displayAlign: 'center' },
     options: {
-      // <body> carries tex2jax_ignore, so only .kdmath islands are typeset.
+      // Typeset the whole page (code/pre/script tags are skipped by default).
+      // Add class="tex2jax_ignore" to any element you want MathJax to skip.
       ignoreHtmlClass: 'tex2jax_ignore',
-      processHtmlClass: 'kdmath',
       renderActions: {
         // Reveal math only once typeset, to avoid a raw-source flash.
         addReady: [10, function () {
