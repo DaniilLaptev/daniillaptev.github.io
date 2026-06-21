@@ -1,0 +1,44 @@
+---
+layout: default
+title: Papers
+permalink: /papers/
+---
+<section class="index-page content-wrap" aria-labelledby="papers-title">
+  <header class="index-head">
+    <p class="section-kicker tone-paper">Papers</p>
+    <h1 id="papers-title">Papers</h1>
+    <p>Publications, preprints, and longer research artifacts.</p>
+  </header>
+
+  <div class="minimal-list">
+    {%- assign papers = site.data.papers -%}
+    {%- if papers and papers.size > 0 -%}
+      {%- for paper in papers -%}
+      <article class="index-item tone-paper">
+        {%- if paper.url -%}
+        <a class="item-title" href="{{ paper.url }}">{{ paper.title }}</a>
+        {%- else -%}
+        <h2 class="item-title">{{ paper.title }}</h2>
+        {%- endif -%}
+        {%- if paper.tags and paper.tags.size > 0 -%}
+        <ul class="item-tags" aria-label="Tags">
+          {%- for tag in paper.tags -%}<li class="tag">{{ tag }}</li>{%- endfor -%}
+        </ul>
+        {%- endif -%}
+        {%- if paper.description -%}
+        <p class="item-desc">{{ paper.description }}</p>
+        {%- endif -%}
+        <p class="item-meta">
+          {%- if paper.authors -%}<span>{{ paper.authors }}</span>{%- endif -%}
+          {%- if paper.venue -%}<span>{{ paper.venue }}</span>{%- endif -%}
+          {%- if paper.year -%}<span>{{ paper.year }}</span>{%- endif -%}
+        </p>
+      </article>
+      {%- endfor -%}
+    {%- else -%}
+    <article class="index-item tone-paper empty-item">
+      <h2 class="item-title">No papers listed yet.</h2>
+    </article>
+    {%- endif -%}
+  </div>
+</section>

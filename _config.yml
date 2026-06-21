@@ -43,6 +43,11 @@ kramdown:
 reading_speed: 220
 
 # ─── Collections / defaults ─────────────────────────────────────────────
+collections:
+  papers:
+    output: true
+    permalink: /papers/:name/
+
 defaults:
   - scope:
       path: ""
@@ -50,6 +55,11 @@ defaults:
     values:
       layout: "post"
       toc: true
+  - scope:
+      path: ""
+      type: "papers"
+    values:
+      layout: "paper"
 
 # ─── Plugins (all GitHub Pages safe) ────────────────────────────────────
 plugins:

@@ -1,0 +1,36 @@
+---
+layout: default
+title: Posts
+permalink: /posts/
+---
+<div class="content-wrap index-page">
+  <header class="index-head">
+    <p class="section-kicker tone-post">Writing</p>
+    <h1>Posts</h1>
+  </header>
+
+  <ul class="minimal-list" role="list">
+    {%- for post in site.posts -%}
+    <li class="index-item tone-post">
+      <a class="item-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {%- if post.tags and post.tags.size > 0 -%}
+      <ul class="item-tags" aria-label="Tags">
+        {%- for tag in post.tags -%}<li class="tag">{{ tag }}</li>{%- endfor -%}
+      </ul>
+      {%- endif -%}
+      {%- if post.subtitle -%}<p class="item-desc">{{ post.subtitle }}</p>{%- endif -%}
+      <p class="item-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%B %-d, %Y" }}</time>
+        {%- assign words = post.content | strip_html | number_of_words -%}
+        <span aria-hidden="true">·</span>
+        <span>{{ words | divided_by: site.reading_speed | plus: 1 }} min</span>
+      </p>
+    </li>
+    {%- else -%}
+    <li class="index-item empty-item">
+      <span class="item-title">No posts yet.</span>
+      <p class="item-desc">Add a Markdown file to <code>_posts/</code> to get started.</p>
+    </li>
+    {%- endfor -%}
+  </ul>
+</div>

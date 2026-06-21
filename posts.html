@@ -1,0 +1,39 @@
+---
+layout: default
+title: Posts
+permalink: /posts/
+---
+<section class="index-page content-wrap" aria-labelledby="posts-title">
+  <header class="index-head">
+    <p class="section-kicker tone-post">Posts</p>
+    <h1 id="posts-title">Posts</h1>
+    <p>Working notes, derivations, experiments, and visual explanations.</p>
+  </header>
+
+  <div class="minimal-list">
+    {%- for post in site.posts -%}
+    {%- assign words = post.content | strip_html | number_of_words -%}
+    {%- assign minutes = words | divided_by: site.reading_speed | plus: 1 -%}
+    {%- assign post_summary = post.summary | default: post.description | default: post.subtitle | default: post.excerpt -%}
+    <article class="index-item tone-post">
+      <a class="item-title" href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      {%- if post.tags and post.tags.size > 0 -%}
+      <ul class="item-tags" aria-label="Tags">
+        {%- for tag in post.tags -%}<li class="tag">{{ tag }}</li>{%- endfor -%}
+      </ul>
+      {%- endif -%}
+      {%- if post_summary -%}
+      <p class="item-desc">{{ post_summary | strip_html | truncatewords: 30 }}</p>
+      {%- endif -%}
+      <p class="item-meta">
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+        <span>{{ minutes }} min read</span>
+      </p>
+    </article>
+    {%- else -%}
+    <article class="index-item tone-post empty-item">
+      <h2 class="item-title">No posts yet.</h2>
+    </article>
+    {%- endfor -%}
+  </div>
+</section>

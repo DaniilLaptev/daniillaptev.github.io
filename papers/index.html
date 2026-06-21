@@ -1,0 +1,39 @@
+---
+layout: default
+title: Papers
+permalink: /papers/
+---
+<div class="content-wrap index-page">
+  <header class="index-head">
+    <p class="section-kicker tone-paper">Research</p>
+    <h1>Papers</h1>
+  </header>
+
+  <ul class="minimal-list" role="list">
+    {%- assign paper_list = site.papers | sort: 'date' | reverse -%}
+    {%- for paper in paper_list -%}
+    <li class="index-item tone-paper">
+      <a class="item-title" href="{{ paper.url | relative_url }}">{{ paper.title }}</a>
+      {%- if paper.tags and paper.tags.size > 0 -%}
+      <ul class="item-tags" aria-label="Tags">
+        {%- for tag in paper.tags -%}<li class="tag">{{ tag }}</li>{%- endfor -%}
+      </ul>
+      {%- endif -%}
+      {%- if paper.subtitle -%}<p class="item-desc">{{ paper.subtitle }}</p>{%- endif -%}
+      {%- if paper.venue -%}
+      <p class="item-meta">
+        <span>{{ paper.venue }}</span>
+        {%- if paper.year -%}<span aria-hidden="true">·</span><span>{{ paper.year }}</span>{%- endif -%}
+        {%- if paper.pdf -%}<span aria-hidden="true">·</span><a href="{{ paper.pdf }}">PDF</a>{%- endif -%}
+        {%- if paper.arxiv -%}<span aria-hidden="true">·</span><a href="{{ paper.arxiv }}">arXiv</a>{%- endif -%}
+      </p>
+      {%- endif -%}
+    </li>
+    {%- else -%}
+    <li class="index-item empty-item">
+      <span class="item-title">No papers listed yet.</span>
+      <p class="item-desc">Add Markdown files to <code>_papers/</code> with <code>layout: paper</code> to list your work here.</p>
+    </li>
+    {%- endfor -%}
+  </ul>
+</div>

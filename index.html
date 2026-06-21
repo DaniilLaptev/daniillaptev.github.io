@@ -1,86 +1,12 @@
 ---
 layout: default
 ---
-<div class="wrap-wide home-layout">
-
-  <aside class="home-sidebar">
-    <p class="sidebar-id-title"><a href="{{ '/' | relative_url }}">{{ site.title }}</a></p>
-    <p class="sidebar-tagline">{{ site.tagline }}</p>
-    <p class="sidebar-bio">{{ site.description }}</p>
-
-    <div class="sidebar-section">
-      <h2>Navigate</h2>
-      <nav class="sidebar-nav">
-        <a href="#post-list">Latest writing</a>
-        <a href="{{ '/about/' | relative_url }}">About</a>
-        <a href="{{ '/feed.xml' | relative_url }}">RSS feed</a>
-        {%- if site.github_username and site.github_username != "" -%}
-        <a href="https://github.com/{{ site.github_username }}" rel="me">GitHub</a>
-        {%- endif -%}
-        {%- if site.scholar_url and site.scholar_url != "" -%}
-        <a href="{{ site.scholar_url }}">Scholar</a>
-        {%- endif -%}
-      </nav>
-    </div>
-
-    {%- if site.tags.size > 0 -%}
-    <div class="sidebar-section">
-      <h2>Topics</h2>
-      <div class="topic-filter" id="topic-filter">
-        <button class="topic active" data-tag="*" type="button" aria-pressed="true">all</button>
-        {%- for tag in site.tags -%}
-        <button class="topic" data-tag="{{ tag[0] | slugify }}" type="button" aria-pressed="false">{{ tag[0] }}</button>
-        {%- endfor -%}
-      </div>
-    </div>
-    {%- endif -%}
-  </aside>
-
-  <section class="home-main">
-    <div class="home-toolbar">
-      <div>
-        <h1 class="list-heading" id="writing-title">Writing</h1>
-        <p class="post-count" id="post-count">{{ site.posts.size }} posts</p>
-      </div>
-      <label class="home-search">
-        <span class="sr-only">Search writing</span>
-        <input id="post-search" type="search" placeholder="Search writing" autocomplete="off">
-      </label>
-    </div>
-    <div class="post-list" id="post-list">
-      {%- for post in site.posts -%}
-      {%- assign words = post.content | strip_html | number_of_words -%}
-      {%- assign minutes = words | divided_by: site.reading_speed | plus: 1 -%}
-      {%- assign post_summary = post.summary | default: post.description | default: post.subtitle -%}
-      {%- capture post_search -%}{{ post.title }} {{ post.subtitle }} {{ post_summary }} {% for t in post.tags %}{{ t }} {% endfor %}{%- endcapture -%}
-      <article class="post-card{% if post.thumbnail %} has-thumb{% endif %}" data-tags="{% for t in post.tags %}{{ t | slugify }} {% endfor %}" data-search="{{ post_search | strip_html | strip_newlines | downcase | escape }}">
-        <a class="post-card-link" href="{{ post.url | relative_url }}">
-          <p class="post-card-meta">
-            <time class="post-card-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
-            <span>{{ minutes }} min read</span>
-          </p>
-          <h2 class="post-card-title">{{ post.title }}</h2>
-          {%- if post.subtitle -%}<p class="post-card-sub">{{ post.subtitle }}</p>{%- endif -%}
-          {%- if post_summary -%}
-          <p class="post-card-excerpt">{{ post_summary | strip_html | truncatewords: 28 }}</p>
-          {%- elsif post.excerpt -%}
-          <p class="post-card-excerpt">{{ post.excerpt | strip_html | truncatewords: 28 }}</p>
-          {%- endif -%}
-          {%- if post.tags and post.tags.size > 0 -%}
-          <p class="post-card-tags">{%- for tag in post.tags -%}<span class="tag">{{ tag }}</span>{%- endfor -%}</p>
-          {%- endif -%}
-          {%- if post.thumbnail -%}
-          <span class="post-card-thumb" aria-hidden="true">
-            <img src="{{ post.thumbnail | relative_url }}" alt="">
-          </span>
-          {%- endif -%}
-        </a>
-      </article>
-      {%- else -%}
-      <p class="empty">No posts yet. Add a Markdown file to <code>_posts/</code> to get started.</p>
-      {%- endfor -%}
-    </div>
-    <p class="empty" id="post-empty" hidden>No matching posts.</p>
-  </section>
-
-</div>
+<section class="landing" aria-labelledby="landing-title">
+  <img class="landing-art" src="{{ '/assets/images/vortex.svg' | relative_url }}" alt="">
+  <div class="landing-copy">
+    <p class="landing-kicker">Research notebook</p>
+    <h1 id="landing-title">{{ site.title }}</h1>
+    <p class="landing-lede">{{ site.description }}</p>
+    <p class="landing-note">{{ site.tagline }}</p>
+  </div>
+</section>

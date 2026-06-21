@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "jekyll",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd '/Users/da.s.laptev/Desktop/Рабочее/blog' && bundle exec jekyll serve --port 4099"],
+      "port": 4099,
+      "autoPort": false
+    }
+  ]
+}

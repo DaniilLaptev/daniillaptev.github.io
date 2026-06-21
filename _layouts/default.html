@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light" data-font="newsreader">
+<html lang="en" data-font="newsreader">
 <head>
   {%- include head.html -%}
   <title>{% if page.title %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} · {{ site.tagline }}{% endif %}</title>
 </head>
-<body>
+<body class="{% if page.url == '/' %}is-home {% endif %}layout-{{ page.layout | default: 'default' }}">
   {%- include header.html -%}
 
   <main id="content" class="site-main" tabindex="-1">

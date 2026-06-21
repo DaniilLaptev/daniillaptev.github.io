@@ -1,32 +1,15 @@
-<!-- Reading progress bar: fixed, unobtrusive, fills as you scroll a post. -->
 <div id="progress-bar" aria-hidden="true"><span id="progress-fill"></span></div>
 <a class="skip-link" href="#content">Skip to content</a>
 
-<header class="site-header">
-  <div class="wrap-wide header-inner">
-    <a class="site-title" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+<header class="site-rail" aria-label="Site">
+  <a class="rail-brand" href="{{ '/' | relative_url }}">
+    <span class="rail-kicker">Into the</span>
+    <span class="rail-name">Sky</span>
+  </a>
 
-    <nav class="site-nav" aria-label="Primary">
-      <a href="{{ '/' | relative_url }}"{% if page.url == "/" or page.layout == "post" %} aria-current="page"{% endif %}>Writing</a>
-      <a href="{{ '/about/' | relative_url }}"{% if page.url == "/about/" %} aria-current="page"{% endif %}>About</a>
-      {%- if site.github_username and site.github_username != "" -%}
-      <a href="https://github.com/{{ site.github_username }}" rel="me">GitHub</a>
-      {%- endif -%}
-    </nav>
-
-    <!-- Settings popover: reading font. -->
-    <div class="settings">
-      <button id="settings-toggle" class="icon-btn" aria-expanded="false"
-              aria-controls="settings-menu" title="Reading settings">Aa</button>
-
-      <div id="settings-menu" class="settings-menu" role="menu" hidden>
-        <p class="settings-label">Reading font</p>
-        <div class="font-options" role="radiogroup" aria-label="Reading font">
-          <button class="font-opt" data-font="newsreader" style="font-family:'Newsreader',serif">Newsreader</button>
-          <button class="font-opt" data-font="lora"       style="font-family:'Lora',serif">Lora</button>
-          <button class="font-opt" data-font="inter"      style="font-family:'Inter',sans-serif">Inter</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <nav class="rail-nav" aria-label="Primary">
+    <a class="nav-posts" href="{{ '/posts/' | relative_url }}"{% if page.url == "/posts/" or page.layout == "post" %} aria-current="page"{% endif %}>Posts</a>
+    <a class="nav-papers" href="{{ '/papers/' | relative_url }}"{% if page.url == "/papers/" %} aria-current="page"{% endif %}>Papers</a>
+    <a class="nav-about" href="{{ '/about/' | relative_url }}"{% if page.url == "/about/" %} aria-current="page"{% endif %}>About</a>
+  </nav>
 </header>

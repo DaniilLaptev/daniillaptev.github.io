@@ -6,12 +6,12 @@ permalink: /about/
 ---
 
 I'm a deep learning research scientist. This is where I keep working notes,
-explanations, and the occasional fully worked-out derivation — the kind of
+explanations, and the occasional fully worked-out derivation: the kind of
 writing that helps me think clearly and might help you too.
 
-Expect: optimization, generative models, representation learning, and whatever
-else I'm currently nerd-sniped by. Posts lean **math-heavy** and **plot-heavy**,
-with interactive figures where they earn their keep.
+Expect optimization, generative models, representation learning, and whatever
+else I am currently trying to understand. Posts lean **math-heavy** and
+**plot-heavy**, with interactive figures where they earn their keep.
 
 ### Get in touch
 
@@ -21,6 +21,4 @@ with interactive figures where they earn their keep.
 ### Colophon
 
 Built with [Jekyll](https://jekyllrb.com/), math by
-[MathJax](https://www.mathjax.org/), hosted on GitHub Pages. Three reading
-fonts, a quiet pastel light theme, and a progress bar that tries to stay out of
-your way.
+[MathJax](https://www.mathjax.org/), hosted on GitHub Pages.

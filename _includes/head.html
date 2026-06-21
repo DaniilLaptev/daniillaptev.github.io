@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#fbfaf7">
+<meta name="theme-color" content="#f8f5ee">
 
 {%- seo -%}
 
@@ -11,12 +11,9 @@
 <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
 {%- feed_meta -%}
 
-<!-- Set reading font BEFORE first paint to avoid a flash. -->
 <script>
   (function () {
     try {
-      localStorage.removeItem('blog-theme');
-      document.documentElement.setAttribute('data-theme', 'light');
       var f = localStorage.getItem('blog-font') || 'newsreader';
       document.documentElement.setAttribute('data-font', f);
     } catch (e) {}
