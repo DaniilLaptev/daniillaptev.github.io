@@ -1,0 +1,26 @@
+---
+layout: default
+---
+<section class="intro prose">
+  <h1 class="home-title">{{ site.title }}</h1>
+  <p class="home-tagline">{{ site.tagline }}</p>
+  <p class="home-desc">{{ site.description }}</p>
+</section>
+
+<section class="post-list">
+  {%- for post in site.posts -%}
+  <article class="post-card">
+    <a class="post-card-link" href="{{ post.url | relative_url }}">
+      <time class="post-card-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+      <h2 class="post-card-title">{{ post.title }}</h2>
+      {%- if post.subtitle -%}<p class="post-card-sub">{{ post.subtitle }}</p>{%- endif -%}
+      {%- if post.excerpt -%}<p class="post-card-excerpt">{{ post.excerpt | strip_html | truncatewords: 32 }}</p>{%- endif -%}
+      {%- if post.tags and post.tags.size > 0 -%}
+      <p class="post-card-tags">{%- for tag in post.tags -%}<span class="tag">{{ tag }}</span>{%- endfor -%}</p>
+      {%- endif -%}
+    </a>
+  </article>
+  {%- else -%}
+  <p class="empty">No posts yet. Add a Markdown file to <code>_posts/</code> to get started.</p>
+  {%- endfor -%}
+</section>

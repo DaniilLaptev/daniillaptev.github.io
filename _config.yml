@@ -1,0 +1,61 @@
+# ─── Site ───────────────────────────────────────────────────────────────
+title: "Into the Sky"
+tagline: "Notes on deep learning research"
+description: >-
+  A personal research notebook: explanations, derivations, and experiments
+  in deep learning. Math-heavy, plot-heavy, minimal.
+author: "Your Name"
+email: "intotheskymaps@gmail.com"
+
+# When you deploy to https://<user>.github.io/<repo>/ set baseurl to "/<repo>".
+# For a user/organization page (https://<user>.github.io) leave baseurl empty.
+baseurl: ""
+url: ""
+
+# Social / links shown in the footer. Leave blank to hide.
+github_username: ""
+twitter_username: ""
+scholar_url: ""
+
+# ─── Build ──────────────────────────────────────────────────────────────
+markdown: kramdown
+highlighter: rouge
+permalink: /posts/:title/
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  # null => kramdown emits raw \( \) and \[ \] delimiters, which MathJax 3
+  # picks up directly. It still PROTECTS math content from Markdown, so
+  # underscores and asterisks inside $$...$$ never get mangled.
+  math_engine: null
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+# Reading-time helper reads this words-per-minute figure.
+reading_speed: 220
+
+# ─── Collections / defaults ─────────────────────────────────────────────
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      toc: true
+
+# ─── Plugins (all GitHub Pages safe) ────────────────────────────────────
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - .sass-cache
+  - node_modules

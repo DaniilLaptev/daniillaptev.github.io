@@ -1,0 +1,35 @@
+---
+layout: default
+---
+<div class="post-grid">
+  {%- if page.toc != false -%}
+  <aside class="toc" aria-label="Table of contents">
+    <button class="toc-toggle" aria-expanded="true" aria-controls="toc-list">Contents</button>
+    <nav id="toc-list"><!-- populated by main.js --></nav>
+  </aside>
+  {%- endif -%}
+
+  <article class="post prose">
+    <header class="post-head">
+      {%- if page.tags and page.tags.size > 0 -%}
+      <p class="post-tags">
+        {%- for tag in page.tags -%}<span class="tag">{{ tag }}</span>{%- endfor -%}
+      </p>
+      {%- endif -%}
+      <h1>{{ page.title }}</h1>
+      {%- if page.subtitle -%}<p class="subtitle">{{ page.subtitle }}</p>{%- endif -%}
+      <p class="post-meta">
+        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+        {%- assign words = content | strip_html | number_of_words -%}
+        <span aria-hidden="true">·</span>
+        <span>{{ words | divided_by: site.reading_speed | plus: 1 }} min read</span>
+      </p>
+    </header>
+
+    {{ content }}
+
+    <footer class="post-foot">
+      <a class="back-link" href="{{ '/' | relative_url }}">← All writing</a>
+    </footer>
+  </article>
+</div>

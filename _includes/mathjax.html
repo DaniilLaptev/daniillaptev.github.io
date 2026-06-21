@@ -1,0 +1,72 @@
+<!-- MathJax 3: comprehensive LaTeX for a research blog.
+     Author tip: in Markdown use $$...$$ for BOTH inline and display math
+     (kramdown protects the content so _ and * never break). On its own
+     line(s) => display; mid-sentence => inline. -->
+<script>
+  window.MathJax = {
+    loader: {
+      load: ['[tex]/physics', '[tex]/mathtools', '[tex]/color',
+             '[tex]/cancel', '[tex]/boldsymbol', '[tex]/ams',
+             '[tex]/noerrors', '[tex]/noundefined']
+    },
+    tex: {
+      // kramdown (math_engine: null) wraps math in <span/div class="kdmath">
+      // using $ … $ (inline) and $$ … $$ (display) and has ALREADY protected
+      // the contents from Markdown. We render those dollars but, via
+      // processHtmlClass below, only inside .kdmath — so stray $ in prose
+      // (e.g. "it cost $5") is never mistaken for math.
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']],
+      processEscapes: true,
+      processEnvironments: true,
+      tags: 'ams',
+      packages: {
+        '[+]': ['physics', 'mathtools', 'color', 'cancel',
+                'boldsymbol', 'ams', 'noerrors', 'noundefined']
+      },
+      macros: {
+        // Number sets
+        RR: '\\mathbb{R}', NN: '\\mathbb{N}', ZZ: '\\mathbb{Z}',
+        QQ: '\\mathbb{Q}', CC: '\\mathbb{C}',
+        // Probability / stats
+        EE: '\\mathbb{E}', PP: '\\mathbb{P}',
+        Var: '\\operatorname{Var}', Cov: '\\operatorname{Cov}',
+        Corr: '\\operatorname{Corr}',
+        Normal: '\\mathcal{N}', Bern: '\\mathrm{Bernoulli}',
+        KL: ['\\mathrm{KL}\\!\\left(#1 \\,\\|\\, #2\\right)', 2],
+        // Linear algebra
+        T: '^{\\mathsf{T}}',
+        tr: '\\operatorname{tr}', rank: '\\operatorname{rank}',
+        diag: '\\operatorname{diag}', sign: '\\operatorname{sign}',
+        vct: ['\\boldsymbol{#1}', 1], mat: ['\\mathbf{#1}', 1],
+        inner: ['\\left\\langle #1,\\, #2 \\right\\rangle', 2],
+        // Optimization / ML
+        argmin: '\\operatorname*{arg\\,min}',
+        argmax: '\\operatorname*{arg\\,max}',
+        softmax: '\\operatorname{softmax}',
+        relu: '\\operatorname{ReLU}',
+        Loss: '\\mathcal{L}', Data: '\\mathcal{D}', Hyp: '\\mathcal{H}',
+        // Shorthands
+        given: '\\mathbin{\\vert}',
+        defeq: '\\mathrel{\\vcenter{:}}=',
+        indep: '\\perp\\!\\!\\!\\perp',
+        ind: '\\mathbb{1}',
+        eps: '\\varepsilon', half: '\\tfrac{1}{2}'
+      }
+    },
+    chtml: { scale: 1.0, displayAlign: 'center' },
+    options: {
+      // <body> carries tex2jax_ignore, so only .kdmath islands are typeset.
+      ignoreHtmlClass: 'tex2jax_ignore',
+      processHtmlClass: 'kdmath',
+      renderActions: {
+        // Reveal math only once typeset, to avoid a raw-source flash.
+        addReady: [10, function () {
+          document.body.classList.add('math-ready');
+        }]
+      }
+    }
+  };
+</script>
+<script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>

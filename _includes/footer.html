@@ -1,0 +1,14 @@
+<footer class="site-footer">
+  <div class="wrap footer-inner">
+    <p>© {{ site.time | date: '%Y' }} {{ site.author }}. Built with Jekyll, served from GitHub Pages.</p>
+    <p class="footer-links">
+      <a href="{{ '/feed.xml' | relative_url }}">RSS</a>
+      {%- if site.github_username and site.github_username != "" -%}
+      · <a href="https://github.com/{{ site.github_username }}">GitHub</a>
+      {%- endif -%}
+      {%- if site.scholar_url and site.scholar_url != "" -%}
+      · <a href="{{ site.scholar_url }}">Scholar</a>
+      {%- endif -%}
+    </p>
+  </div>
+</footer>

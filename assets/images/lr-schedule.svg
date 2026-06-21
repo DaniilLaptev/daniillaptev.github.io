@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 380" font-family="Inter, sans-serif">
+  <rect width="640" height="380" fill="#ffffff" rx="10"/>
+  <g stroke="#e7e3dc" stroke-width="1">
+    <line x1="70" y1="40" x2="70" y2="320"/>
+    <line x1="70" y1="320" x2="600" y2="320"/>
+  </g>
+  <path d="M70,300 L150,70 C260,70 240,300 600,300" fill="none" stroke="#f3cdab" stroke-width="3"/>
+  <circle cx="150" cy="70" r="4" fill="#f3cdab"/>
+  <text x="150" y="55" text-anchor="middle" fill="#847e90" font-size="12">warmup peak</text>
+  <text x="335" y="358" text-anchor="middle" fill="#847e90" font-size="14">training step</text>
+  <text x="30" y="180" text-anchor="middle" fill="#847e90" font-size="14" transform="rotate(-90 30 180)">learning rate</text>
+</svg>
