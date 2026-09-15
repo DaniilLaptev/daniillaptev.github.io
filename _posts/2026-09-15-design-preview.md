@@ -226,13 +226,25 @@ patterns when real media is available:
 
 Every sentence, value, table entry, and figure on this page is synthetic.
 
-[^note]: This footnote also contains placeholder text and exists only to test
-    the footnote treatment and return link.
+[^note]: This footnote contains inline mathematics,
+    $$\EE[X]=\int_{\Omega}X(\omega)\,d\PP(\omega)$$, and exists only to test
+    the footnote treatment, MathJax rendering, and return link.
 
 [^long-note]: This deliberately long footnote exists to test progressive
     disclosure rather than to communicate a result. A useful note may need
     several sentences to preserve a qualification, explain an edge case, or
     record a compact derivation without interrupting the main argument. The
+    display below tests alignment inside the bounded preview:
+
+    $$
+    \begin{aligned}
+      p(z\mid x) &= \frac{p(x\mid z)p(z)}{\int p(x\mid u)p(u)\,du}, \\
+      \nabla_\theta \Loss(\theta)
+        &= \EE_{z\sim p_\theta}\!\left[\nabla_\theta\log p_\theta(z)\,R(z)\right].
+    \end{aligned}
+    $$
+
+    The
     preview should remain close to its reference, readable with a mouse or
     keyboard, and large enough for ordinary notes. When the content grows
     beyond the preview, the lower edge fades instead of ending abruptly. A

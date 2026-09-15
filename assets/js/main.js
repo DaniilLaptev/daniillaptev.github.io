@@ -234,6 +234,41 @@
       popover.classList.toggle('is-above', above);
     }
 
+    function refresh(preview) {
+      if (preview.popover.hidden) return;
+      var truncated = preview.content.scrollHeight > preview.content.clientHeight + 2;
+      preview.popover.classList.toggle('is-truncated', truncated);
+      preview.more.hidden = !truncated;
+      position(preview.reference, preview.popover);
+    }
+
+    function typeset(preview, attempt) {
+      if (preview.popover.hidden || preview.popover.dataset.mathTypeset ||
+          preview.popover.dataset.mathTypesetting) return;
+
+      var mathjax = window.MathJax;
+      if (!mathjax || !mathjax.startup || !mathjax.startup.promise ||
+          typeof mathjax.typesetPromise !== 'function') {
+        if (attempt < 50) {
+          window.setTimeout(function () { typeset(preview, attempt + 1); }, 100);
+        }
+        return;
+      }
+
+      preview.popover.dataset.mathTypesetting = 'true';
+      mathjax.startup.promise.then(function () {
+        if (preview.popover.hidden) return;
+        return mathjax.typesetPromise([preview.popover]).then(function () {
+          preview.popover.dataset.mathTypeset = 'true';
+          window.requestAnimationFrame(function () { refresh(preview); });
+        });
+      }).catch(function () {
+        // Leave the source readable and allow another attempt when reopened.
+      }).then(function () {
+        delete preview.popover.dataset.mathTypesetting;
+      });
+    }
+
     function hide(preview) {
       preview.popover.hidden = true;
       preview.popover.classList.remove('is-expanded');
@@ -279,7 +314,7 @@
       reference.setAttribute('aria-controls', popover.id);
       reference.setAttribute('aria-expanded', 'false');
 
-      var preview = { reference: reference, popover: popover, more: more };
+      var preview = { reference: reference, popover: popover, content: content, more: more };
 
       function show() {
         cancelClose();
@@ -287,12 +322,8 @@
         active = preview;
         popover.hidden = false;
         reference.setAttribute('aria-expanded', 'true');
-        window.requestAnimationFrame(function () {
-          var truncated = content.scrollHeight > content.clientHeight + 2;
-          popover.classList.toggle('is-truncated', truncated);
-          more.hidden = !truncated;
-          position(reference, popover);
-        });
+        window.requestAnimationFrame(function () { refresh(preview); });
+        typeset(preview, 0);
       }
 
       reference.addEventListener('mouseenter', show);
