@@ -128,126 +128,57 @@
     });
   })();
 
-  (function initCarousels() {
-    all('.carousel').forEach(function (carousel, carouselIndex) {
-      var slides = Array.prototype.slice.call(carousel.children);
-      if (slides.length < 2) return;
-      carousel.setAttribute('role', 'region');
-      carousel.setAttribute('aria-roledescription', 'carousel');
-
-      var viewport = document.createElement('div');
-      var track = document.createElement('div');
-      viewport.className = 'carousel-viewport';
-      track.className = 'carousel-track';
-      slides.forEach(function (slide, slideIndex) {
-        slide.classList.add('carousel-slide');
-        slide.id = 'carousel-' + carouselIndex + '-slide-' + slideIndex;
-        track.appendChild(slide);
+  (function initFigureSwitchers() {
+    all('.figure-switcher').forEach(function (switcher, switcherIndex) {
+      var views = all('.figure-view', switcher).filter(function (view) {
+        return view.closest('.figure-switcher') === switcher;
       });
-      viewport.appendChild(track);
+      if (views.length < 2) return;
 
-      var previous = document.createElement('button');
-      var next = document.createElement('button');
-      previous.className = 'carousel-btn prev';
-      next.className = 'carousel-btn next';
-      previous.type = next.type = 'button';
-      previous.setAttribute('aria-label', 'Previous figure');
-      next.setAttribute('aria-label', 'Next figure');
-      previous.textContent = '←';
-      next.textContent = '→';
-      viewport.appendChild(previous);
-      viewport.appendChild(next);
-
-      var dots = document.createElement('div');
-      dots.className = 'carousel-dots';
-      dots.setAttribute('role', 'tablist');
-      carousel.innerHTML = '';
-      carousel.appendChild(viewport);
-      carousel.appendChild(dots);
-      var activeIndex = 0;
-
-      slides.forEach(function (slide, slideIndex) {
-        var dot = document.createElement('button');
-        dot.className = 'carousel-dot';
-        dot.type = 'button';
-        dot.setAttribute('role', 'tab');
-        dot.setAttribute('aria-label', 'Figure ' + (slideIndex + 1));
-        dot.setAttribute('aria-controls', slide.id);
-        dot.addEventListener('click', function () { go(slideIndex); });
-        dots.appendChild(dot);
-      });
-
-      function go(index) {
-        activeIndex = (index + slides.length) % slides.length;
-        track.style.transform = 'translateX(' + (-activeIndex * 100) + '%)';
-        all('.carousel-dot', dots).forEach(function (dot, dotIndex) {
-          var active = dotIndex === activeIndex;
-          dot.classList.toggle('active', active);
-          dot.setAttribute('aria-selected', active ? 'true' : 'false');
-          dot.tabIndex = active ? 0 : -1;
-          slides[dotIndex].setAttribute('aria-hidden', active ? 'false' : 'true');
-        });
-        resizePlots(slides[activeIndex]);
-      }
-
-      previous.addEventListener('click', function () { go(activeIndex - 1); });
-      next.addEventListener('click', function () { go(activeIndex + 1); });
-      carousel.tabIndex = 0;
-      carousel.addEventListener('keydown', function (event) {
-        if (event.key === 'ArrowLeft') go(activeIndex - 1);
-        if (event.key === 'ArrowRight') go(activeIndex + 1);
-      });
-      go(0);
-    });
-  })();
-
-  (function initPlotSwitchers() {
-    all('.plot-switcher').forEach(function (switcher, switcherIndex) {
-      var panels = all('.plot-option', switcher).filter(function (panel) {
-        return panel.closest('.plot-switcher') === switcher;
-      });
-      if (!panels.length) return;
-      panels.forEach(function (panel) { panel.classList.add('plot-panel'); });
-      if (panels.length === 1) return;
-
+      var stage = switcher.querySelector('.figure-stage');
+      var sequence = switcher.hasAttribute('data-sequence');
+      var toolbar = document.createElement('div');
       var tabs = document.createElement('div');
-      tabs.className = 'plot-tabs';
-      tabs.setAttribute('role', 'tablist');
-      switcher.insertBefore(tabs, switcher.firstChild);
       var tabNodes = [];
+      var activeIndex = 0;
+      toolbar.className = 'figure-toolbar figure-switcher-toolbar' + (sequence ? ' has-arrows' : '');
+      tabs.className = 'figure-tablist';
+      tabs.setAttribute('role', 'tablist');
+      tabs.setAttribute('aria-label', sequence ? 'Figure sequence' : 'Figure views');
 
       function select(index, focus) {
-        panels.forEach(function (panel, panelIndex) {
-          var active = panelIndex === index;
-          panel.hidden = !active;
-          tabNodes[panelIndex].classList.toggle('active', active);
-          tabNodes[panelIndex].setAttribute('aria-selected', active ? 'true' : 'false');
-          tabNodes[panelIndex].tabIndex = active ? 0 : -1;
+        activeIndex = (index + views.length) % views.length;
+        views.forEach(function (view, viewIndex) {
+          var active = viewIndex === activeIndex;
+          view.hidden = !active;
+          tabNodes[viewIndex].classList.toggle('active', active);
+          tabNodes[viewIndex].setAttribute('aria-selected', active ? 'true' : 'false');
+          tabNodes[viewIndex].tabIndex = active ? 0 : -1;
         });
-        if (focus) tabNodes[index].focus();
-        resizePlots(panels[index]);
+        if (focus) tabNodes[activeIndex].focus();
+        resizePlots(views[activeIndex]);
       }
 
-      panels.forEach(function (panel, panelIndex) {
-        var panelId = 'plot-panel-' + switcherIndex + '-' + panelIndex;
-        var tabId = 'plot-tab-' + switcherIndex + '-' + panelIndex;
-        panel.id = panelId;
-        panel.setAttribute('role', 'tabpanel');
-        panel.setAttribute('aria-labelledby', tabId);
+      views.forEach(function (view, viewIndex) {
+        var viewId = 'figure-view-' + switcherIndex + '-' + viewIndex;
+        var tabId = 'figure-tab-' + switcherIndex + '-' + viewIndex;
         var tab = document.createElement('button');
+        view.id = viewId;
+        view.setAttribute('role', 'tabpanel');
+        view.setAttribute('aria-labelledby', tabId);
         tab.id = tabId;
-        tab.className = 'plot-tab';
+        tab.className = 'figure-tab';
         tab.type = 'button';
         tab.setAttribute('role', 'tab');
-        tab.setAttribute('aria-controls', panelId);
-        tab.textContent = panel.dataset.label || ('View ' + (panelIndex + 1));
-        tab.addEventListener('click', function () { select(panelIndex, false); });
+        tab.setAttribute('aria-controls', viewId);
+        tab.textContent = view.dataset.label || ('View ' + (viewIndex + 1));
+        tab.addEventListener('click', function () { select(viewIndex, false); });
         tab.addEventListener('keydown', function (event) {
-          var nextIndex = panelIndex;
-          if (event.key === 'ArrowRight') nextIndex = (panelIndex + 1) % panels.length;
-          else if (event.key === 'ArrowLeft') nextIndex = (panelIndex - 1 + panels.length) % panels.length;
+          var nextIndex = viewIndex;
+          if (event.key === 'ArrowRight') nextIndex = (viewIndex + 1) % views.length;
+          else if (event.key === 'ArrowLeft') nextIndex = (viewIndex - 1 + views.length) % views.length;
           else if (event.key === 'Home') nextIndex = 0;
-          else if (event.key === 'End') nextIndex = panels.length - 1;
+          else if (event.key === 'End') nextIndex = views.length - 1;
           else return;
           event.preventDefault();
           select(nextIndex, true);
@@ -255,8 +186,152 @@
         tabNodes.push(tab);
         tabs.appendChild(tab);
       });
+
+      if (sequence) {
+        var previous = document.createElement('button');
+        var next = document.createElement('button');
+        previous.className = 'figure-sequence-btn previous';
+        next.className = 'figure-sequence-btn next';
+        previous.type = next.type = 'button';
+        previous.setAttribute('aria-label', 'Previous figure');
+        next.setAttribute('aria-label', 'Next figure');
+        previous.textContent = '\u2190';
+        next.textContent = '\u2192';
+        previous.addEventListener('click', function () { select(activeIndex - 1, false); });
+        next.addEventListener('click', function () { select(activeIndex + 1, false); });
+        toolbar.appendChild(previous);
+        toolbar.appendChild(tabs);
+        toolbar.appendChild(next);
+      } else {
+        toolbar.appendChild(tabs);
+      }
+
+      switcher.insertBefore(toolbar, stage || switcher.firstChild);
       select(0, false);
     });
+  })();
+
+  (function initFootnotePreviews() {
+    var references = all('a.footnote, a[rel="footnote"]');
+    if (!references.length) return;
+    var closeTimer;
+    var active;
+
+    function cancelClose() {
+      window.clearTimeout(closeTimer);
+    }
+
+    function position(reference, popover) {
+      var referenceRect = reference.getBoundingClientRect();
+      var popoverRect = popover.getBoundingClientRect();
+      var left = referenceRect.left + referenceRect.width / 2 - popoverRect.width / 2;
+      left = Math.max(12, Math.min(left, window.innerWidth - popoverRect.width - 12));
+      var top = referenceRect.bottom + 10;
+      var above = top + popoverRect.height > window.innerHeight - 12;
+      if (above) top = Math.max(76, referenceRect.top - popoverRect.height - 10);
+      popover.style.left = left + 'px';
+      popover.style.top = top + 'px';
+      popover.classList.toggle('is-above', above);
+    }
+
+    function hide(preview) {
+      preview.popover.hidden = true;
+      preview.popover.classList.remove('is-expanded');
+      preview.more.textContent = 'Read full note';
+      preview.reference.setAttribute('aria-expanded', 'false');
+      if (active === preview) active = null;
+    }
+
+    function scheduleClose(preview) {
+      cancelClose();
+      closeTimer = window.setTimeout(function () {
+        if (!preview.popover.matches(':hover') && !preview.popover.contains(document.activeElement) && document.activeElement !== preview.reference) {
+          hide(preview);
+        }
+      }, 140);
+    }
+
+    references.forEach(function (reference, index) {
+      var targetId = decodeURIComponent((reference.getAttribute('href') || '').replace(/^#/, ''));
+      var target = document.getElementById(targetId);
+      if (!target) return;
+
+      var popover = document.createElement('aside');
+      var content = document.createElement('div');
+      var more = document.createElement('button');
+      var clone = target.cloneNode(true);
+      all('.reversefootnote', clone).forEach(function (link) { link.remove(); });
+      all('[id]', clone).forEach(function (node) { node.removeAttribute('id'); });
+      while (clone.firstChild) content.appendChild(clone.firstChild);
+
+      popover.id = 'footnote-preview-' + index;
+      popover.className = 'footnote-popover';
+      popover.setAttribute('role', 'note');
+      popover.hidden = true;
+      content.className = 'footnote-popover-content';
+      more.className = 'footnote-more';
+      more.type = 'button';
+      more.textContent = 'Read full note';
+      more.hidden = true;
+      popover.appendChild(content);
+      popover.appendChild(more);
+      document.body.appendChild(popover);
+      reference.setAttribute('aria-controls', popover.id);
+      reference.setAttribute('aria-expanded', 'false');
+
+      var preview = { reference: reference, popover: popover, more: more };
+
+      function show() {
+        cancelClose();
+        if (active && active !== preview) hide(active);
+        active = preview;
+        popover.hidden = false;
+        reference.setAttribute('aria-expanded', 'true');
+        window.requestAnimationFrame(function () {
+          var truncated = content.scrollHeight > content.clientHeight + 2;
+          popover.classList.toggle('is-truncated', truncated);
+          more.hidden = !truncated;
+          position(reference, popover);
+        });
+      }
+
+      reference.addEventListener('mouseenter', show);
+      reference.addEventListener('mouseleave', function () { scheduleClose(preview); });
+      reference.addEventListener('focus', show);
+      reference.addEventListener('blur', function () { scheduleClose(preview); });
+      reference.addEventListener('click', function (event) {
+        if (!window.matchMedia('(hover: none)').matches) return;
+        if (popover.hidden) {
+          event.preventDefault();
+          show();
+        }
+      });
+      popover.addEventListener('mouseenter', cancelClose);
+      popover.addEventListener('mouseleave', function () { scheduleClose(preview); });
+      popover.addEventListener('focusin', cancelClose);
+      popover.addEventListener('focusout', function () { scheduleClose(preview); });
+      more.addEventListener('click', function () {
+        var expanded = popover.classList.toggle('is-expanded');
+        more.textContent = expanded ? 'Collapse note' : 'Read full note';
+        position(reference, popover);
+      });
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && active) {
+        hide(active);
+        active.reference.focus();
+      }
+    });
+    document.addEventListener('pointerdown', function (event) {
+      if (active && event.target !== active.reference && !active.popover.contains(event.target)) hide(active);
+    });
+    window.addEventListener('scroll', function () {
+      if (active) hide(active);
+    }, { passive: true });
+    window.addEventListener('resize', function () {
+      if (active) position(active.reference, active.popover);
+    }, { passive: true });
   })();
 
   function loadPlotly() {

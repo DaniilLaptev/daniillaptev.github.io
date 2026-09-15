@@ -72,34 +72,48 @@ paragraph with class `proof` gets a compact proof-sketch treatment.
 ## Figures
 
 Ordinary SVG, PNG, or WebP images should remain the default. They load quickly,
-print well, and survive feeds and archives.
+print well, and survive feeds and archives. Every visual uses the same outer
+frame, content stage, and caption:
+
+```html
+<figure class="figure-frame">
+  <div class="figure-stage">
+    <img src="/assets/posts/my-post/figure.svg" alt="Describe the figure">
+  </div>
+  <figcaption><strong>Figure 1.</strong> Explain what the reader should notice.</figcaption>
+</figure>
+```
 
 Keep post-specific files in `assets/posts/<post-slug>/`, so figures and data
 artifacts remain visibly owned by the post that uses them.
 
-Animated GIFs work through the ordinary figure markup. Native video should use
-browser controls and include a fallback sentence:
+Animated GIFs use the same image markup. Native video remains inside the same
+frame and should include browser controls and a fallback sentence:
 
 ```html
-<figure>
-  <video controls preload="metadata" playsinline>
-    <source src="/assets/posts/my-post/demo.webm" type="video/webm">
-    <source src="/assets/posts/my-post/demo.mp4" type="video/mp4">
-    Your browser does not support embedded video.
-  </video>
+<figure class="figure-frame">
+  <div class="figure-stage">
+    <video controls preload="metadata" playsinline>
+      <source src="/assets/posts/my-post/demo.webm" type="video/webm">
+      <source src="/assets/posts/my-post/demo.mp4" type="video/mp4">
+      Your browser does not support embedded video.
+    </video>
+  </div>
   <figcaption>What the animation demonstrates.</figcaption>
 </figure>
 ```
 
-For hosted video, wrap the provider iframe in `<div class="video-embed">` so
-it keeps a responsive 16:9 frame.
+For hosted video, put a provider iframe inside `.video-embed`, then put that
+element inside `.figure-stage`. It keeps a responsive 16:9 content area while
+the caption remains part of the shared outer frame.
 
 ### Native phase diagram
 
 The reference post demonstrates the dependency-free `phase-lab` component.
-It uses a canvas and a range input, and is initialized by `assets/js/main.js`.
-Use it as a pattern for small purpose-built explainers rather than as a generic
-chart API.
+It uses a canvas and a range input inside a centered `.figure-controlbar`.
+Each control gets its own compact `.figure-knob`; several controls wrap and
+remain centered without creating a full-width shaded header. Use it as a
+pattern for small purpose-built explainers rather than as a generic chart API.
 
 ### Plotly
 
@@ -120,15 +134,34 @@ theme. Invalid specifications and network failures produce a visible message.
 
 ### Switchable figures
 
-Wrap `.plot-option` elements in `.plot-switcher`. Each option uses its
-`data-label` as the tab name. The generated tabs support arrow keys and proper
-tab semantics.
+Use `.figure-switcher` on the outer frame and place `.figure-view` elements in
+its stage. Each view uses `data-label` as its tab name. Generated tabs remain
+centered, wrap instead of scrolling, and support arrow-key navigation:
+
+```html
+<figure class="figure-frame figure-switcher">
+  <div class="figure-stage">
+    <div class="figure-view" data-label="Interactive">...</div>
+    <div class="figure-view" data-label="Static fallback">...</div>
+  </div>
+  <figcaption>One caption for the complete figure.</figcaption>
+</figure>
+```
 
 ### Sequences
 
-Wrap figures in `.carousel` for checkpoints or ablation sequences. Static
-figures should still be preferred when the sequence can be understood as one
-well-designed panel.
+Add `data-sequence` to a `.figure-switcher` to place previous and next arrows
+at the toolbar edges. The views, tabs, content stage, and caption remain the
+same as an ordinary switcher. Static figures should still be preferred when a
+sequence can be understood as one well-designed panel.
+
+## Footnotes
+
+Write ordinary kramdown footnotes with `[^name]` and define them at the end of
+the source. Hovering or focusing a reference shows the note beside the reading
+position. Previews are capped at roughly sixteen lines; longer notes fade at
+the bottom and provide an in-place expansion control. The original endnotes
+remain in the document for printing, direct links, and no-JavaScript readers.
 
 ## Structure
 
@@ -136,5 +169,5 @@ well-designed panel.
 - `_posts/2026-09-15-design-preview.md` is synthetic content for design review.
 - `_layouts/post.html` owns note metadata and navigation.
 - `assets/css/style.css` contains the full visual system.
-- `assets/js/main.js` contains TOC, carousel, tab, canvas, and Plotly
+- `assets/js/main.js` contains TOC, figure switcher, footnote, canvas, and Plotly
   behavior with no application framework.

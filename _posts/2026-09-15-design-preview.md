@@ -36,6 +36,7 @@ Unordered lists suit parallel artifacts:
 > surrounding argument.
 
 Footnotes can hold secondary context without interrupting the sentence.[^note]
+Long notes use the same reference and can be expanded from their preview.[^long-note]
 
 ## Mathematics
 
@@ -113,8 +114,10 @@ def moving_average(values, window):
 
 ## Static figure
 
-<figure>
-  <img src="{{ '/assets/posts/design-preview/loss-curve.svg' | relative_url }}" alt="Two synthetic curves descending at different rates">
+<figure class="figure-frame">
+  <div class="figure-stage">
+    <img src="{{ '/assets/posts/design-preview/loss-curve.svg' | relative_url }}" alt="Two synthetic curves descending at different rates">
+  </div>
   <figcaption><strong>Figure 1.</strong> A synthetic static figure used to review axes, labels, spacing, and caption treatment.</figcaption>
 </figure>
 
@@ -123,26 +126,30 @@ def moving_average(values, window):
 The following canvas is generated entirely in the browser. The values and
 geometry are arbitrary and carry no empirical meaning.
 
-<div class="phase-lab" data-phase-lab>
-  <div class="phase-lab-head">
-    <p class="phase-lab-title">Synthetic geometry</p>
-    <label class="phase-lab-control">
-      <span>Parameter</span>
-      <input type="range" min="0" max="0.95" value="0.58" step="0.01" aria-label="Synthetic parameter">
-      <span class="phase-lab-value" data-phase-value>0.58</span>
-    </label>
+<figure class="figure-frame phase-lab" data-phase-lab>
+  <div class="figure-toolbar">
+    <div class="figure-controlbar" aria-label="Figure controls">
+      <label class="figure-knob">
+        <span>Parameter</span>
+        <input type="range" min="0" max="0.95" value="0.58" step="0.01" aria-label="Synthetic parameter">
+        <output class="phase-lab-value" data-phase-value>0.58</output>
+      </label>
+    </div>
   </div>
-  <canvas role="img" aria-label="Synthetic directions and a response curve as the parameter changes"></canvas>
-  <p class="phase-lab-caption"><strong>Figure 2.</strong> A dependency-free interactive diagram for reviewing controls and responsive layout.</p>
-</div>
+  <div class="figure-stage">
+    <canvas role="img" aria-label="Synthetic directions and a response curve as the parameter changes"></canvas>
+  </div>
+  <figcaption><strong>Figure 2.</strong> A dependency-free interactive diagram for reviewing controls and responsive layout.</figcaption>
+</figure>
 
 ## Plotly figure
 
 The chart below uses invented series and loads Plotly only when it approaches
 the viewport.
 
-<div class="plot-switcher">
-  <div class="plot-option" data-label="Interactive">
+<figure class="figure-frame figure-switcher">
+  <div class="figure-stage">
+    <div class="figure-view" data-label="Interactive">
     <div class="iplot" style="height:420px">
       <p class="iplot-message">Interactive figure loading...</p>
       <script type="application/json">
@@ -167,26 +174,27 @@ the viewport.
       }
       </script>
     </div>
-    <figcaption><strong>Figure 3.</strong> A synthetic interactive chart for checking hover, axes, and typography.</figcaption>
+    </div>
+    <div class="figure-view" data-label="Static fallback">
+      <img src="{{ '/assets/posts/design-preview/loss-curve.svg' | relative_url }}" alt="Static fallback with two synthetic curves">
+    </div>
   </div>
-  <figure class="plot-option" data-label="Static fallback">
-    <img src="{{ '/assets/posts/design-preview/loss-curve.svg' | relative_url }}" alt="Static fallback with two synthetic curves">
-    <figcaption>The static view remains available for print and restricted networks.</figcaption>
-  </figure>
-</div>
+  <figcaption><strong>Figure 3.</strong> A synthetic chart with interactive and static views in one stable figure frame.</figcaption>
+</figure>
 
 ## Figure sequence
 
-<div class="carousel">
-  <figure>
-    <img src="{{ '/assets/posts/design-preview/loss-curve.svg' | relative_url }}" alt="First synthetic carousel frame">
-    <figcaption><strong>Frame 1.</strong> A simple chart used as the first carousel state.</figcaption>
-  </figure>
-  <figure>
-    <img src="{{ '/assets/images/paper-vortex.jpg' | relative_url }}" alt="Abstract geometric texture used as a second carousel frame">
-    <figcaption><strong>Frame 2.</strong> A contrasting image used only to test navigation and image scaling.</figcaption>
-  </figure>
-</div>
+<figure class="figure-frame figure-switcher" data-sequence>
+  <div class="figure-stage">
+    <div class="figure-view" data-label="Frame 1">
+      <img src="{{ '/assets/posts/design-preview/loss-curve.svg' | relative_url }}" alt="First synthetic sequence frame">
+    </div>
+    <div class="figure-view" data-label="Frame 2">
+      <img src="{{ '/assets/images/paper-vortex.jpg' | relative_url }}" alt="Abstract geometric texture used as a second sequence frame">
+    </div>
+  </div>
+  <figcaption><strong>Figure 4.</strong> A two-frame sequence using the same tabs and caption treatment as every other figure.</figcaption>
+</figure>
 
 ## Media placeholders
 
@@ -194,22 +202,53 @@ GIFs use ordinary image markup. Native video and hosted embeds use these
 patterns when real media is available:
 
 ```html
-<figure>
-  <video controls preload="metadata" playsinline poster="poster.webp">
-    <source src="demo.webm" type="video/webm">
-    <source src="demo.mp4" type="video/mp4">
-    Your browser does not support embedded video.
-  </video>
+<figure class="figure-frame">
+  <div class="figure-stage">
+    <video controls preload="metadata" playsinline poster="poster.webp">
+      <source src="demo.webm" type="video/webm">
+      <source src="demo.mp4" type="video/mp4">
+      Your browser does not support embedded video.
+    </video>
+  </div>
   <figcaption>Describe what changes during playback.</figcaption>
 </figure>
 
-<div class="video-embed">
-  <iframe src="https://provider.example/embed/id"
-          title="Description of the video" loading="lazy"></iframe>
-</div>
+<figure class="figure-frame">
+  <div class="figure-stage">
+    <div class="video-embed">
+      <iframe src="https://provider.example/embed/id"
+              title="Description of the video" loading="lazy"></iframe>
+    </div>
+  </div>
+  <figcaption>Describe the hosted video.</figcaption>
+</figure>
 ```
 
 Every sentence, value, table entry, and figure on this page is synthetic.
 
 [^note]: This footnote also contains placeholder text and exists only to test
     the footnote treatment and return link.
+
+[^long-note]: This deliberately long footnote exists to test progressive
+    disclosure rather than to communicate a result. A useful note may need
+    several sentences to preserve a qualification, explain an edge case, or
+    record a compact derivation without interrupting the main argument. The
+    preview should remain close to its reference, readable with a mouse or
+    keyboard, and large enough for ordinary notes. When the content grows
+    beyond the preview, the lower edge fades instead of ending abruptly. A
+    reader can then expand the note in place and scroll within the popover if
+    necessary. The complete endnote remains at the bottom of the article as a
+    durable fallback for printing, link navigation, and readers without
+    JavaScript. The remainder of this note is deliberately repetitive test
+    material. It checks that a substantial aside does not expand the reading
+    column or obscure the reference that opened it. The expanded state should
+    retain a bounded height, provide its own scrolling when necessary, and
+    collapse without moving the article. Links, inline emphasis, and ordinary
+    punctuation should remain legible inside the preview. Keyboard focus must
+    follow the same path as pointer hover, while the Escape key should close
+    the note and return focus to its reference. These requirements matter more
+    than the particular placeholder prose used to exercise them. A final group
+    of neutral sentences makes the sample reliably exceed sixteen rendered
+    lines on a typical desktop display. The text carries no claim or result.
+    It exists only to make truncation, fading, expansion, and internal scrolling
+    visible during design review.
