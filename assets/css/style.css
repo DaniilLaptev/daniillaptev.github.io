@@ -258,5 +258,7 @@ body.math-ready .math-loading { visibility: visible; }
   .site-main, .post-shell { display: block; width: 100%; padding: 0; }
   .prose > figure, .prose > video, .prose > .video-embed, .prose > .plot-switcher, .prose > .carousel, .prose > .iplot { width: 100%; margin-left: 0; transform: none; }
   .phase-lab { width: 100%; margin-left: 0; transform: none; }
-  a { color: inherit; }
+  .plot-switcher [data-label="Interactive"] { display: none !important; }
+  .plot-switcher [data-label="Static fallback"] { display: block !important; }
+  a { color: inherit; text-decoration: none; }
 }
