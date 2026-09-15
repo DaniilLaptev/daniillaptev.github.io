@@ -1,30 +1,28 @@
 <!-- MathJax 3: comprehensive LaTeX for a research blog.
-     Author tip: in Markdown use $$...$$ for BOTH inline and display math
-     (kramdown protects the content so _ and * never break). On its own
-     line(s) => display; mid-sentence => inline. -->
+     Kramdown converts Markdown $$...$$ to the appropriate delimiter. Inside
+     raw HTML, use \(...\) inline and $$...$$ on separate lines for displays. -->
 <script>
   window.MathJax = {
     loader: {
-      load: ['[tex]/physics', '[tex]/mathtools', '[tex]/color',
-             '[tex]/cancel', '[tex]/boldsymbol', '[tex]/ams',
-             '[tex]/noerrors', '[tex]/noundefined']
+      load: ['[tex]/physics', '[tex]/mathtools', '[tex]/amscd',
+             '[tex]/textmacros', '[tex]/color', '[tex]/cancel',
+             '[tex]/boldsymbol', '[tex]/noerrors']
     },
     tex: {
-      // kramdown's math engine converts $$…$$ in Markdown into bare \(…\)
-      // (inline) and \[…\] (display) delimiters, having ALREADY protected the
-      // contents from Markdown (so _ * ^ inside are safe). We match those
-      // delimiters. We also keep $$…$$ for display as a fallback. We do NOT
-      // enable single $ as a delimiter, so stray $ in prose ("it cost $5")
-      // is never mistaken for math.
+      // Match kramdown's inline/display output and explicit raw-HTML delimiters.
+      // Keep $$...$$ for display as a fallback. Single $ remains ordinary prose.
       inlineMath: [['\\(', '\\)']],
       displayMath: [['$$', '$$'], ['\\[', '\\]']],
       processEscapes: true,
       processEnvironments: true,
+      processRefs: true,
       tags: 'ams',
+      maxBuffer: 10 * 1024,
       packages: {
-        '[+]': ['physics', 'mathtools', 'color', 'cancel',
-                'boldsymbol', 'ams', 'noerrors', 'noundefined']
+        '[+]': ['physics', 'mathtools', 'amscd', 'textmacros', 'color',
+                'cancel', 'boldsymbol', 'ams', 'noerrors', 'noundefined']
       },
+      ams: { multlineWidth: '95%' },
       macros: {
         // Number sets
         RR: '\\mathbb{R}', NN: '\\mathbb{N}', ZZ: '\\mathbb{Z}',
@@ -55,7 +53,7 @@
         eps: '\\varepsilon', half: '\\tfrac{1}{2}'
       }
     },
-    chtml: { scale: 1.0, displayAlign: 'center' },
+    chtml: { scale: 1.0, displayAlign: 'center', displayIndent: '0' },
     options: {
       // Typeset the whole page (code/pre/script tags are skipped by default).
       // Add class="tex2jax_ignore" to any element you want MathJax to skip.
@@ -70,4 +68,4 @@
   };
 </script>
 <script id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js"></script>

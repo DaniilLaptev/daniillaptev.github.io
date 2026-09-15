@@ -1,130 +1,140 @@
-# Into the Sky — a research blog
+# molchat neironki
 
-A minimal, math-heavy personal blog built with Jekyll and MathJax, designed for
-GitHub Pages. A quiet pastel light theme, three switchable reading fonts, a top
-reading-progress bar, an auto-generated table of contents, image carousels, and
-tabbed plot switchers.
+A reader-oriented research notebook built with Jekyll. The site is designed for
+mathematical explanations, experiment notes, wide figures, and occasional
+interactive visualizations while keeping the publishing stack small.
 
 ## Run locally
 
 ```bash
 bundle install
 bundle exec jekyll serve --livereload
-# open http://localhost:4000
 ```
 
-If you don't have Ruby/Bundler: install Ruby (3.x), then `gem install bundler`.
+Open <http://localhost:4000>. The dependency set matches GitHub Pages.
 
-## Deploy to GitHub Pages
+## Publish a post
 
-1. Create a repo and push this folder.
-2. **User/org site** → name the repo `<username>.github.io`, leave
-   `baseurl: ""` in `_config.yml`.
-   **Project site** → any repo name, set `baseurl: "/<repo-name>"`.
-3. In the repo: **Settings → Pages → Build and deployment → Source:
-   _Deploy from a branch_**, branch `main`, folder `/ (root)`.
-4. GitHub builds it automatically — no Actions workflow needed.
-
-Then edit `_config.yml`: `title`, `author`, `github_username`, `scholar_url`, etc.
-
-## Writing a post
-
-Add `_posts/YYYY-MM-DD-title.md` with front matter:
+Create `_posts/YYYY-MM-DD-title.md`:
 
 ```yaml
 ---
 layout: post
-title: "My Title"
-subtitle: "Optional one-liner"
-summary: "Short homepage summary"
-thumbnail: /assets/images/my-figure.svg
-date: 2026-06-21
-tags: [optimization, theory]
-toc: true   # set false to hide the table of contents
+title: "A precise, reader-facing title"
+summary: "A short social-preview description."
+abstract: "The claim, method, and main limitation in a compact paragraph."
+date: 2026-06-22
+updated: 2026-06-24
+tags: [optimization, diagnostics]
+toc: true
 ---
 ```
 
-### Math
-Use `$$ … $$` for **both** inline and display math (kramdown keeps the contents
-safe from Markdown). Display math on its own line gets an equation number.
-Custom macros (`\EE`, `\KL`, `\argmin`, `\vct`, `\Loss`, …) live in
-`_includes/mathjax.html` — add your own there. The `physics` and `mathtools`
-MathJax packages are preloaded.
+The homepage uses `abstract` as the visible brief and clamps it to three lines.
+Use `summary` for social metadata. Papers, explanations, and shorter notes use
+this same dated-post format so they remain in one chronology.
 
-### Plot switcher (tabbed figures)
+## Mathematics
+
+Use `$$ ... $$` inside ordinary Markdown; kramdown renders it inline when it is
+part of a sentence and as display mathematics when it stands on its own lines.
+Inside a raw HTML paragraph, use `\( ... \)` for inline mathematics. Shared
+macros live in `_includes/mathjax.html`. MathJax is loaded for every post and
+for standalone pages that set `math: true`.
+
+For multi-line displays, place `aligned`, `gathered`, `split`, `cases`, or a
+matrix environment inside one display block. Keep sentence-level expressions
+on the same source line as their punctuation:
+
+```latex
+$$
+\begin{aligned}
+  f(x) &= x^2 + 1, \\
+  f'(x) &= 2x.
+\end{aligned}
+$$
+```
+
+Use one neutral environment for statements worth separating from the argument.
+The label may be `Theorem`, `Lemma`, `Proposition`, `Definition`, `Remark`,
+`Principle`, or another term required by the content:
+
 ```html
-<div class="plot-switcher">
-  <figure class="plot-option" data-label="Loss">
-    <img src="{{ '/assets/images/x.svg' | relative_url }}" alt="...">
-    <figcaption>Caption.</figcaption>
-  </figure>
-  <figure class="plot-option" data-label="Accuracy"> ... </figure>
+<div class="statement" markdown="1">
+<span class="statement-label">Proposition</span>
+The statement, with $$\Loss(\theta)$$ if needed.
 </div>
 ```
-A switcher with a **single** `.plot-option` renders as a plain framed figure —
-no tab is shown — so the same markup works for one plot or many.
 
-### Interactive plots (Plotly)
-For hover tooltips, zoom, or rotatable 3D, use an `.iplot` block. Plotly is
-lazy-loaded only on pages that need it and styled from the CSS variables.
+Keep `<blockquote>` for quotations rather than theorem-like statements. A
+paragraph with class `proof` gets a compact proof-sketch treatment.
+
+## Figures
+
+Ordinary SVG, PNG, or WebP images should remain the default. They load quickly,
+print well, and survive feeds and archives.
+
+Keep post-specific files in `assets/posts/<post-slug>/`, so figures and data
+artifacts remain visibly owned by the post that uses them.
+
+Animated GIFs work through the ordinary figure markup. Native video should use
+browser controls and include a fallback sentence:
+
+```html
+<figure>
+  <video controls preload="metadata" playsinline>
+    <source src="/assets/posts/my-post/demo.webm" type="video/webm">
+    <source src="/assets/posts/my-post/demo.mp4" type="video/mp4">
+    Your browser does not support embedded video.
+  </video>
+  <figcaption>What the animation demonstrates.</figcaption>
+</figure>
+```
+
+For hosted video, wrap the provider iframe in `<div class="video-embed">` so
+it keeps a responsive 16:9 frame.
+
+### Native phase diagram
+
+The reference post demonstrates the dependency-free `phase-lab` component.
+It uses a canvas and a range input, and is initialized by `assets/js/main.js`.
+Use it as a pattern for small purpose-built explainers rather than as a generic
+chart API.
+
+### Plotly
+
+Use Plotly when readers need hover, zoom, linked axes, or 3D rotation:
+
 ```html
 <div class="iplot" style="height:420px">
-<script type="application/json">
-{ "data": [ { "type": "scatter3d", "mode": "markers",
-              "x": [...], "y": [...], "z": [...] } ],
-  "layout": {}, "config": { "responsive": true } }
-</script>
-</div>
-```
-- **Images vs. interactive**: `<img>` handles SVG/PNG/JPG/WebP. For PDF use
-  `<iframe src="….pdf">` or export to SVG. Data-driven plots ship their data in
-  the JSON spec above.
-- **They compose.** Put an `.iplot` inside a `.plot-option`, or a
-  `.plot-switcher`/`.iplot` inside a `.carousel` slide — each interactive plot
-  is resized when its tab/slide is revealed.
-
-### Carousel
-```html
-<div class="carousel">
-  <figure><img src="..." alt="..."><figcaption>...</figcaption></figure>
-  <figure><img src="..." alt="..."><figcaption>...</figcaption></figure>
+  <p class="iplot-message">Interactive figure loading...</p>
+  <script type="application/json">
+  {"data": [...], "layout": {...}, "config": {...}}
+  </script>
 </div>
 ```
 
-### Sidenotes (margin notes)
-Fill the right margin of a post with Tufte/Distill-style asides:
-```html
-Some claim in the text.<span class="sidenote">An aside that sits in the right
-margin on wide screens and folds into an indented block on narrow ones.</span>
-```
-Put the `<span>` right after the word it annotates. Add `markdown="span"` to the
-span if you want Markdown (links, math `$$…$$`) processed inside it. Below
-~1200px wide the right rail disappears and notes fold inline automatically.
+Plotly is loaded lazily when the figure approaches the viewport. Author-supplied
+axis titles, ranges, scales, and scene settings take precedence over the site
+theme. Invalid specifications and network failures produce a visible message.
 
-### Callouts
-```html
-<div class="callout key">   <!-- or: note, warn -->
-  <span class="callout-title">Heads up</span>
-  Your text here.
-</div>
-```
-Add `markdown="1"` to the `<div>` if you want Markdown processed inside it.
+### Switchable figures
 
-## Layout
+Wrap `.plot-option` elements in `.plot-switcher`. Each option uses its
+`data-label` as the tab name. The generated tabs support arrow keys and proper
+tab semantics.
 
-- **Home** ([index.html](index.html)) is a two-column grid: a sticky left
-  **sidebar** (identity, navigation, and a JS-powered topic/tag filter) plus a
-  searchable post list. Tags come from each post's front matter automatically;
-  clicking a topic and typing in the search box filter the list in place.
-- **Posts** ([_layouts/post.html](_layouts/post.html)) use three zones inside a
-  wide frame: the **TOC** on the left, the reading column in the middle, and the
-  right margin for **sidenotes**. On narrower screens the side TOC becomes a
-  horizontal section nav above the article body, and sidenotes fold inline.
-- Header, footer, and the home grid share the `--wide` frame width; the reading
-  column stays at `--maxw`. Both are CSS variables in `assets/css/style.css`.
+### Sequences
 
-## Customizing the look
-- **Colors / palette**: CSS variables at the top of `assets/css/style.css`.
-- **Fonts**: the three options are wired in `_includes/header.html`,
-  `assets/css/style.css` (`--font-*`), and loaded in `_includes/head.html`.
-- **Behavior** (progress bar, TOC, carousel, tabs): `assets/js/main.js`.
+Wrap figures in `.carousel` for checkpoints or ablation sequences. Static
+figures should still be preferred when the sequence can be understood as one
+well-designed panel.
+
+## Structure
+
+- `index.html` is the complete chronological publication list.
+- `_posts/2026-09-15-design-preview.md` is synthetic content for design review.
+- `_layouts/post.html` owns note metadata and navigation.
+- `assets/css/style.css` contains the full visual system.
+- `assets/js/main.js` contains TOC, carousel, tab, canvas, and Plotly
+  behavior with no application framework.

@@ -1,21 +1,15 @@
 # ─── Site ───────────────────────────────────────────────────────────────
-title: "Into the Sky"
-tagline: "Notes on deep learning research"
+title: "molchat neironki"
+tagline: "Technical notes and visual explanations"
+lang: en
 description: >-
-  A personal research notebook: explanations, derivations, and experiments
-  in deep learning. Math-heavy, plot-heavy, minimal.
-author: "Your Name"
-email: "intotheskymaps@gmail.com"
+  A minimal notebook for mathematical explanations, technical notes, and
+  interactive figures.
+author: "molchat neironki"
 
-# When you deploy to https://<user>.github.io/<repo>/ set baseurl to "/<repo>".
-# For a user/organization page (https://<user>.github.io) leave baseurl empty.
+# Set these to the public origin and repository path before a permanent release.
 baseurl: ""
 url: ""
-
-# Social / links shown in the footer. Leave blank to hide.
-github_username: ""
-twitter_username: ""
-scholar_url: ""
 
 # ─── Build ──────────────────────────────────────────────────────────────
 markdown: kramdown
@@ -42,25 +36,17 @@ kramdown:
 # Reading-time helper reads this words-per-minute figure.
 reading_speed: 220
 
-# ─── Collections / defaults ─────────────────────────────────────────────
-collections:
-  papers:
-    output: true
-    permalink: /papers/:name/
-
 defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/images/paper-vortex.jpg
   - scope:
       path: ""
       type: "posts"
     values:
       layout: "post"
       toc: true
-  - scope:
-      path: ""
-      type: "papers"
-    values:
-      layout: "paper"
-
 # ─── Plugins (all GitHub Pages safe) ────────────────────────────────────
 plugins:
   - jekyll-feed

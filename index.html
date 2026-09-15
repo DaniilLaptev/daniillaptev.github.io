@@ -1,6 +1,24 @@
 ---
 layout: default
+title: Research notes
 ---
-<section class="landing" aria-label="Home">
-  <img class="landing-art" src="{{ '/assets/images/vortex.svg' | relative_url }}" alt="">
+<section class="home-feed wide-wrap" id="writing" aria-labelledby="writing-title">
+  <h1 class="sr-only" id="writing-title">Writing</h1>
+  <div class="feed-list">
+    {%- for post in site.posts -%}
+    {%- assign brief = post.abstract | default: post.summary | default: post.description | default: post.excerpt -%}
+    <article class="feed-item{% if forloop.first %} is-featured{% endif %}">
+      <div class="feed-side">
+        {%- if forloop.first -%}<span class="featured-label">Featured</span>{%- endif -%}
+        <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %-d, %Y" }}</time>
+      </div>
+      <div class="feed-content">
+        <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+        {%- if brief -%}<p class="feed-brief">{{ brief | strip_html }}</p>{%- endif -%}
+      </div>
+    </article>
+    {%- else -%}
+    <p>No writing has been published yet.</p>
+    {%- endfor -%}
+  </div>
 </section>

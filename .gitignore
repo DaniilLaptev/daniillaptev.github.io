@@ -6,4 +6,5 @@ vendor/
 .bundle/
 Gemfile.lock
 node_modules/
+exam/
 .DS_Store

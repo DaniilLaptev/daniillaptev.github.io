@@ -1,10 +1,9 @@
 ---
 layout: default
 ---
-<div class="post-shell">
+<div class="post-shell{% if page.toc == false %} no-toc{% endif %}">
   {%- if page.toc != false -%}
   <aside class="article-nav" aria-label="Post navigation">
-    <a class="article-back" href="{{ '/posts/' | relative_url }}">All posts</a>
     <p class="article-nav-label">Sections</p>
     <nav id="toc-list" data-toc-list><!-- populated by main.js --></nav>
   </aside>
@@ -13,22 +12,24 @@ layout: default
   <article class="post prose">
     <header class="post-head">
       <h1>{{ page.title }}</h1>
-      {%- if page.tags and page.tags.size > 0 -%}
-      <ul class="post-tags" aria-label="Tags">
-        {%- for tag in page.tags -%}<li class="tag">{{ tag }}</li>{%- endfor -%}
-      </ul>
-      {%- endif -%}
-      {%- if page.subtitle -%}<p class="subtitle">{{ page.subtitle }}</p>{%- endif -%}
       <p class="post-meta">
-        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+        <span>Published <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time></span>
+        {%- if page.updated -%}<span>Updated <time datetime="{{ page.updated | date_to_xmlschema }}">{{ page.updated | date: "%B %-d, %Y" }}</time></span>{%- endif -%}
         {%- assign words = content | strip_html | number_of_words -%}
-        <span aria-hidden="true">·</span>
         <span>{{ words | divided_by: site.reading_speed | plus: 1 }} min read</span>
       </p>
+      {%- if page.abstract -%}
+      <div class="post-abstract">
+        <p>{{ page.abstract }}</p>
+      </div>
+      {%- endif -%}
     </header>
 
     {%- if page.toc != false -%}
-    <nav class="mobile-toc" aria-label="Post sections" data-toc-list><!-- populated by main.js --></nav>
+    <details class="mobile-toc-shell">
+      <summary>On this page</summary>
+      <nav class="mobile-toc" aria-label="Post sections" data-toc-list><!-- populated by main.js --></nav>
+    </details>
     {%- endif -%}
 
     {{ content }}
@@ -50,7 +51,6 @@ layout: default
         {%- endif -%}
       </nav>
       {%- endif -%}
-      <a class="back-link" href="{{ '/posts/' | relative_url }}">All posts</a>
     </footer>
   </article>
 </div>
